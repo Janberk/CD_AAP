@@ -58,7 +58,8 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), SaveUserActivity.class);
+				Intent intent = new Intent(v.getContext(),
+						SaveUserActivity.class);
 				startActivity(intent);
 			}
 		});
