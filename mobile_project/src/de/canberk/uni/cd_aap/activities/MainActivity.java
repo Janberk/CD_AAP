@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 
-@SuppressLint("NewApi") // Test again
+@SuppressLint("NewApi")
 public class MainActivity extends Activity {
 
 	private StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
