@@ -11,11 +11,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,11 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 
-@SuppressLint("NewApi")
 public class MainActivity extends Activity {
 
-	private StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-			.permitAll().build();
+	// private StrictMode.ThreadPolicy policy = new
+	// StrictMode.ThreadPolicy.Builder()
+	// .permitAll().build();
 
 	private EditText et_email;
 	private EditText et_password;
@@ -43,14 +42,14 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_screen);
-		StrictMode.setThreadPolicy(policy);
+		// StrictMode.setThreadPolicy(policy);
 		initElements();
 
 		btn_login.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				getRequest();
+				new ProcessRequest().execute(createFullUri());
 			}
 		});
 
@@ -63,6 +62,61 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+
+	}
+
+	private String createFullUri() {
+		String file = "check_login.php";
+		String uri = "http://10.0.2.2:80/development/examples/registration_form/backend_android/";
+		String fullUri = uri + file + createGetParameters();
+
+		return fullUri;
+	}
+
+	public class ProcessRequest extends AsyncTask<String, Integer, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(params[0]);
+			try {
+				HttpResponse response = httpclient.execute(httpGet);
+				if (response != null) {
+					String line = "";
+					InputStream inputstream = response.getEntity().getContent();
+					line = convertStreamToString(inputstream);
+					return line;
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"Unable to complete your request",
+							Toast.LENGTH_LONG).show();
+				}
+			} catch (ClientProtocolException e) {
+				Toast.makeText(getApplicationContext(),
+						"Caught ClientProtocolException " + e,
+						Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			} catch (IOException e) {
+				Toast.makeText(getApplicationContext(),
+						"Caught IOException " + e, Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(),
+						"Caught Exception " + e, Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			if (result != null) {
+				Toast.makeText(getApplicationContext(), result,
+						Toast.LENGTH_LONG).show();
+			}
+		}
 
 	}
 
@@ -80,39 +134,28 @@ public class MainActivity extends Activity {
 		return result;
 	}
 
-	private void getRequest() {
-		String file = "check_login.php";
-		String uri = "http://10.0.2.2:80/development/examples/registration_form/backend_android/";
-		String fullUri = uri + file + createGetParameters();
-
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(fullUri);
-		try {
-			HttpResponse response = httpclient.execute(httpGet);
-			if (response != null) {
-				String line = "";
-				InputStream inputstream = response.getEntity().getContent();
-				line = convertStreamToString(inputstream);
-				Toast.makeText(this, line, Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(this, "Unable to complete your request",
-						Toast.LENGTH_LONG).show();
-			}
-		} catch (ClientProtocolException e) {
-			Toast.makeText(this, "Caught ClientProtocolException " + e,
-					Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		} catch (IOException e) {
-			Toast.makeText(this, "Caught IOException " + e, Toast.LENGTH_SHORT)
-					.show();
-			e.printStackTrace();
-		} catch (Exception e) {
-			Toast.makeText(this, "Caught Exception " + e, Toast.LENGTH_SHORT)
-					.show();
-			e.printStackTrace();
-		}
-
-	}
+	/*
+	 * private void getRequest() { String file = "check_login.php"; String uri =
+	 * "http://10.0.2.2:80/development/examples/registration_form/backend_android/"
+	 * ; String fullUri = uri + file + createGetParameters();
+	 * 
+	 * HttpClient httpclient = new DefaultHttpClient(); HttpGet httpGet = new
+	 * HttpGet(fullUri); try { HttpResponse response =
+	 * httpclient.execute(httpGet); if (response != null) { String line = "";
+	 * InputStream inputstream = response.getEntity().getContent(); line =
+	 * convertStreamToString(inputstream); Toast.makeText(this, line,
+	 * Toast.LENGTH_LONG).show(); } else { Toast.makeText(this,
+	 * "Unable to complete your request", Toast.LENGTH_LONG).show(); } } catch
+	 * (ClientProtocolException e) { Toast.makeText(this,
+	 * "Caught ClientProtocolException " + e, Toast.LENGTH_SHORT).show();
+	 * e.printStackTrace(); } catch (IOException e) { Toast.makeText(this,
+	 * "Caught IOException " + e, Toast.LENGTH_SHORT) .show();
+	 * e.printStackTrace(); } catch (Exception e) { Toast.makeText(this,
+	 * "Caught Exception " + e, Toast.LENGTH_SHORT) .show();
+	 * e.printStackTrace(); }
+	 * 
+	 * }
+	 */
 
 	private String convertStreamToString(InputStream is) {
 		String line = "";
