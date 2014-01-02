@@ -12,7 +12,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,15 +29,18 @@ import de.canberk.uni.cd_aap.R;
 
 public class LogInActivity extends Activity {
 
+	public static final String MY_PREFERENCES = "MyPrefs";
+	public static final String EMAIL = "emailKey";
+	public static final String PASSWORD = "passwordKey";
+
+	private SharedPreferences sharedPreferences;
+
 	private String responseToString;
 
 	private EditText et_email;
 	private EditText et_password;
 	private Button btn_login;
 	private TextView tv_signup_link;
-
-	private String email;
-	private String password;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,19 @@ public class LogInActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+	}
+
+	@Override
+	protected void onResume() {
+		sharedPreferences = getSharedPreferences(MY_PREFERENCES,
+				Context.MODE_PRIVATE);
+		if (sharedPreferences.contains(EMAIL)) {
+			if (sharedPreferences.contains(PASSWORD)) {
+				Intent intent = new Intent(this, MainActivity.class);
+				startActivity(intent);
+			}
+		}
+		super.onResume();
 	}
 
 	public class ProcessRequest extends AsyncTask<String, Integer, String> {
@@ -95,9 +114,10 @@ public class LogInActivity extends Activity {
 
 			if (result != null) {
 				if (result.equals("Response: Success!!!")) {
-					Intent intent = new Intent(getApplicationContext(),
-							MainActivity.class);
-					startActivity(intent);
+					login();
+//					Intent intent = new Intent(getApplicationContext(),
+//							MainActivity.class);
+//					startActivity(intent);
 				} else {
 					Toast.makeText(getApplicationContext(), result,
 							Toast.LENGTH_LONG).show();
@@ -114,8 +134,8 @@ public class LogInActivity extends Activity {
 	}
 
 	private String createGetParameters() {
-		email = et_email.getText().toString();
-		password = et_password.getText().toString();
+		String email = et_email.getText().toString();
+		String password = et_password.getText().toString();
 		String result = "?email=" + email + "&password=" + password;
 		return result;
 	}
@@ -141,6 +161,17 @@ public class LogInActivity extends Activity {
 			e.printStackTrace();
 		}
 		return sb.toString();
+	}
+	
+	public void login() {
+		Editor editor = sharedPreferences.edit();
+		String email = et_email.getText().toString();
+		String password = et_password.getText().toString();
+		editor.putString(EMAIL, email);
+		editor.putString(PASSWORD, password);
+		editor.commit();
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
