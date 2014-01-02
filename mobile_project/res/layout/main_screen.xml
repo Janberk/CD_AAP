@@ -44,66 +44,36 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" >
-
-            <TextView
-                android:id="@+id/tv_signup_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:text="@string/sign_up_link"
-                android:textColor="#ede9ff"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/footer"
             android:layout_below="@+id/header"
             android:paddingBottom="@dimen/activity_padding"
             android:paddingLeft="@dimen/activity_padding"
             android:paddingRight="@dimen/activity_padding"
             android:paddingTop="@dimen/activity_padding" >
-
-            <EditText
-                android:id="@+id/et_email"
-                android:layout_width="match_parent"
+            
+            <TextView
+                android:id="@+id/tv_welcome"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="30dp"
-                android:hint="@string/email"
+                android:layout_marginTop="@dimen/activity_margin"
+                android:layout_centerHorizontal="true"
+                android:text="@string/welcome"
                 android:textColor="#ede9ff"
-                android:inputType="textEmailAddress" >
-
-                <requestFocus />
-            </EditText>
-
-            <EditText
-                android:id="@+id/et_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/et_email"
-                android:hint="@string/password"
-                android:textColor="#ede9ff"
-                android:inputType="textPassword" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/et_password"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:background="#2c436f"
-                android:text="@string/login"
+                android:background="#c91010"
+                android:text="@string/logout"
                 android:textColor="#ede9ff" />
+
         </RelativeLayout>
     </RelativeLayout>
 

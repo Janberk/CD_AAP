@@ -94,8 +94,14 @@ public class LogInActivity extends Activity {
 			super.onPostExecute(result);
 
 			if (result != null) {
-				Toast.makeText(getApplicationContext(), result,
-						Toast.LENGTH_LONG).show();
+				if (result.equals("Response: Success!!!")) {
+					Intent intent = new Intent(getApplicationContext(),
+							MainActivity.class);
+					startActivity(intent);
+				} else {
+					Toast.makeText(getApplicationContext(), result,
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 	}
