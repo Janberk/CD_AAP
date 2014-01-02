@@ -19,6 +19,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -30,6 +31,8 @@ import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 
 public class SignUpActivity extends Activity {
+	
+	private String responseToString;
 
 	private EditText et_firstname;
 	private EditText et_lastname;
@@ -55,7 +58,7 @@ public class SignUpActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				postRequest();
+				new ProcessRequest().execute(createFullUri());
 			}
 		});
 
@@ -67,6 +70,54 @@ public class SignUpActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+	}
+
+	public class ProcessRequest extends AsyncTask<String, Integer, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(params[0]);
+
+			try {
+				httpPost.setEntity(new UrlEncodedFormEntity(createParams(),
+						"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				Toast.makeText(getApplicationContext(),
+						"Caught UnsupportedEncodingException " + e,
+						Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			}
+
+			try {
+				HttpResponse response = httpclient.execute(httpPost);
+				if (response != null) {
+					InputStream inputstream = response.getEntity().getContent();
+					responseToString = convertStreamToString(inputstream);
+					return responseToString;
+				} else {
+					return "Unable to complete your request";
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				return null;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			if (result != null) {
+				Toast.makeText(getApplicationContext(), result,
+						Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 
 	public void initElements() {
@@ -95,50 +146,14 @@ public class SignUpActivity extends Activity {
 		params.add(new BasicNameValuePair("password", password));
 
 		return params;
-
 	}
 
-	public void postRequest() {
+	private String createFullUri() {
 		String file = "user_data.php";
 		String uri = "http://10.0.2.2:80/development/examples/registration_form/backend_android/";
 		String fullUri = uri + file;
 
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(fullUri);
-
-		try {
-			httpPost.setEntity(new UrlEncodedFormEntity(createParams(), "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			Toast.makeText(this, "Caught UnsupportedEncodingException " + e,
-					Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		}
-
-		try {
-			HttpResponse response = httpclient.execute(httpPost);
-			if (response != null) {
-				String line = "";
-				InputStream inputstream = response.getEntity().getContent();
-				line = convertStreamToString(inputstream);
-				Toast.makeText(this, line, Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(this, "Unable to complete your request",
-						Toast.LENGTH_LONG).show();
-			}
-		} catch (ClientProtocolException e) {
-			Toast.makeText(this, "Caught ClientProtocolException " + e,
-					Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		} catch (IOException e) {
-			Toast.makeText(this, "Caught IOException " + e, Toast.LENGTH_SHORT)
-					.show();
-			e.printStackTrace();
-		} catch (Exception e) {
-			Toast.makeText(this, "Caught Exception " + e, Toast.LENGTH_SHORT)
-					.show();
-			e.printStackTrace();
-		}
-
+		return fullUri;
 	}
 
 	private String convertStreamToString(InputStream is) {

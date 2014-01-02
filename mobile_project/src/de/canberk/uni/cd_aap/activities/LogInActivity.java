@@ -26,6 +26,8 @@ import de.canberk.uni.cd_aap.R;
 
 public class LogInActivity extends Activity {
 
+	private String responseToString;
+
 	private EditText et_email;
 	private EditText et_password;
 	private Button btn_login;
@@ -38,7 +40,6 @@ public class LogInActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.log_in_screen);
-		// StrictMode.setThreadPolicy(policy);
 		initElements();
 
 		btn_login.setOnClickListener(new OnClickListener() {
@@ -53,60 +54,45 @@ public class LogInActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(),
-						SignUpActivity.class);
+				Intent intent = new Intent(v.getContext(), SignUpActivity.class);
 				startActivity(intent);
 			}
 		});
-	}
-
-	private String createFullUri() {
-		String file = "check_login.php";
-		String uri = "http://10.0.2.2:80/development/examples/registration_form/backend_android/";
-		String fullUri = uri + file + createGetParameters();
-
-		return fullUri;
 	}
 
 	public class ProcessRequest extends AsyncTask<String, Integer, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
-
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(params[0]);
+
 			try {
 				HttpResponse response = httpclient.execute(httpGet);
 				if (response != null) {
-					String line = "";
+
 					InputStream inputstream = response.getEntity().getContent();
-					line = convertStreamToString(inputstream);
-					return line;
+					responseToString = convertStreamToString(inputstream);
+					return responseToString;
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"Unable to complete your request",
-							Toast.LENGTH_LONG).show();
+					return "Unable to complete your request";
 				}
 			} catch (ClientProtocolException e) {
-				Toast.makeText(getApplicationContext(),
-						"Caught ClientProtocolException " + e,
-						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
+				return null;
 			} catch (IOException e) {
-				Toast.makeText(getApplicationContext(),
-						"Caught IOException " + e, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
+				return null;
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(),
-						"Caught Exception " + e, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
+				return null;
 			}
-			return null;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
+
 			if (result != null) {
 				Toast.makeText(getApplicationContext(), result,
 						Toast.LENGTH_LONG).show();
@@ -126,6 +112,14 @@ public class LogInActivity extends Activity {
 		password = et_password.getText().toString();
 		String result = "?email=" + email + "&password=" + password;
 		return result;
+	}
+
+	private String createFullUri() {
+		String file = "check_login.php";
+		String uri = "http://10.0.2.2:80/development/examples/registration_form/backend_android/";
+		String fullUri = uri + file + createGetParameters();
+
+		return fullUri;
 	}
 
 	private String convertStreamToString(InputStream is) {
