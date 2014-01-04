@@ -1,20 +1,9 @@
 package de.canberk.uni.cd_aap.activities;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
@@ -28,11 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.canberk.uni.cd_aap.HTTPRequestHandler;
 import de.canberk.uni.cd_aap.R;
 
 public class SignUpActivity extends Activity {
-	
-	private String responseToString;
+
+	private HTTPRequestHandler httpPost;
 
 	private EditText et_firstname;
 	private EditText et_lastname;
@@ -42,23 +32,20 @@ public class SignUpActivity extends Activity {
 	private Button btn_signup;
 	private TextView tv_login_link;
 
-	private String firstname;
-	private String lastname;
-	private String username;
-	private String email;
-	private String password;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sign_up_screen);
 		initElements();
 
+		httpPost = new HTTPRequestHandler(
+				"http://10.0.2.2:80/development/examples/registration_form/backend_android/user_data.php");
+
 		btn_signup.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				new ProcessRequest().execute(createFullUri());
+				new AsyncHTTPRequest().execute(httpPost.getUri());
 			}
 		});
 
@@ -66,56 +53,54 @@ public class SignUpActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), MainActivity.class);
+				Intent intent = new Intent(v.getContext(), LogInActivity.class);
 				startActivity(intent);
 			}
 		});
 	}
 
-	public class ProcessRequest extends AsyncTask<String, Integer, String> {
+	public class AsyncHTTPRequest extends AsyncTask<String, Integer, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(params[0]);
-
-			try {
-				httpPost.setEntity(new UrlEncodedFormEntity(createParams(),
-						"UTF-8"));
-			} catch (UnsupportedEncodingException e) {
-				Toast.makeText(getApplicationContext(),
-						"Caught UnsupportedEncodingException " + e,
-						Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
-			}
-
-			try {
-				HttpResponse response = httpclient.execute(httpPost);
-				if (response != null) {
-					InputStream inputstream = response.getEntity().getContent();
-					responseToString = convertStreamToString(inputstream);
-					return responseToString;
-				} else {
-					return "Unable to complete your request";
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
+			return httpPost.readHTTPPostResponse(createParams());
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			if (result != null) {
-				Toast.makeText(getApplicationContext(), result,
+			checkResult(result);
+		}
+	}
+
+	private void checkResult(String result) {
+		if (result != null) {
+			int key = Integer.valueOf(result);
+			switch (key) {
+			case LogInActivity.RESPONSE_CODE_SUCCESS:
+				Toast.makeText(getApplicationContext(),
+						"User was saved successfully. Back to log in.",
 						Toast.LENGTH_LONG).show();
+				Intent intent = new Intent(getApplicationContext(),
+						LogInActivity.class);
+				startActivity(intent);
+				break;
+			case LogInActivity.RESPONSE_CODE_EMPTY_FIELDS:
+				Toast.makeText(getApplicationContext(),
+						"Please fill in all fields.", Toast.LENGTH_LONG).show();
+				break;
+			case LogInActivity.RESPONSE_CODE_INVALID_DATA:
+				Toast.makeText(getApplicationContext(),
+						"You entered invalid data. Please try again.",
+						Toast.LENGTH_LONG).show();
+				break;
+			case LogInActivity.RESPONSE_CODE_NO_GET:
+				Toast.makeText(getApplicationContext(),
+						"ERROR while trying to connect to server!",
+						Toast.LENGTH_LONG).show();
+				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -133,11 +118,11 @@ public class SignUpActivity extends Activity {
 	public List<NameValuePair> createParams() {
 		List<NameValuePair> params = new ArrayList<NameValuePair>(2);
 
-		firstname = et_firstname.getText().toString();
-		lastname = et_lastname.getText().toString();
-		username = et_username.getText().toString();
-		email = et_email.getText().toString();
-		password = et_password.getText().toString();
+		String firstname = et_firstname.getText().toString();
+		String lastname = et_lastname.getText().toString();
+		String username = et_username.getText().toString();
+		String email = et_email.getText().toString();
+		String password = et_password.getText().toString();
 
 		params.add(new BasicNameValuePair("firstname", firstname));
 		params.add(new BasicNameValuePair("lastname", lastname));
@@ -146,29 +131,6 @@ public class SignUpActivity extends Activity {
 		params.add(new BasicNameValuePair("password", password));
 
 		return params;
-	}
-
-	private String createFullUri() {
-		String file = "user_data.php";
-		String uri = "http://10.0.2.2:80/development/examples/registration_form/backend_android/";
-		String fullUri = uri + file;
-
-		return fullUri;
-	}
-
-	private String convertStreamToString(InputStream is) {
-		String line = "";
-		StringBuilder sb = new StringBuilder();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-		try {
-			while ((line = rd.readLine()) != null) {
-				sb.append(line);
-			}
-		} catch (Exception e) {
-			Toast.makeText(this, "Stream Exception", Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		}
-		return sb.toString();
 	}
 
 	@Override

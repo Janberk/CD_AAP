@@ -1,15 +1,10 @@
 package de.canberk.uni.cd_aap.activities;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.canberk.uni.cd_aap.HTTPRequestHandler;
 import de.canberk.uni.cd_aap.R;
 
 public class LogInActivity extends Activity {
@@ -33,9 +29,14 @@ public class LogInActivity extends Activity {
 	public static final String EMAIL = "emailKey";
 	public static final String PASSWORD = "passwordKey";
 
-	private SharedPreferences sharedPreferences;
+	public static final int RESPONSE_CODE_SUCCESS = 0;
+	public static final int RESPONSE_CODE_EMPTY_FIELDS = 1;
+	public static final int RESPONSE_CODE_INVALID_DATA = 2;
+	public static final int RESPONSE_CODE_NO_GET = 3;
 
-	private String responseToString;
+	private HTTPRequestHandler httpPost;
+
+	private SharedPreferences sharedPreferences;
 
 	private EditText et_email;
 	private EditText et_password;
@@ -48,11 +49,14 @@ public class LogInActivity extends Activity {
 		setContentView(R.layout.log_in_screen);
 		initElements();
 
+		httpPost = new HTTPRequestHandler(
+				"http://10.0.2.2:80/development/examples/registration_form/backend_android/check_login.php");
+
 		btn_login.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				new ProcessRequest().execute(createFullUri());
+				new AsyncHTTPRequest().execute(httpPost.getUri());
 			}
 		});
 
@@ -79,51 +83,49 @@ public class LogInActivity extends Activity {
 		super.onResume();
 	}
 
-	public class ProcessRequest extends AsyncTask<String, Integer, String> {
+	public class AsyncHTTPRequest extends AsyncTask<String, Integer, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(params[0]);
-
-			try {
-				HttpResponse response = httpclient.execute(httpGet);
-				if (response != null) {
-
-					InputStream inputstream = response.getEntity().getContent();
-					responseToString = convertStreamToString(inputstream);
-					return responseToString;
-				} else {
-					return "Unable to complete your request";
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
+			return httpPost.readHTTPPostResponse(createParams());
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
+			checkResult(result);
+		}
 
-			if (result != null) {
-				if (result.equals("Response: Success!!!")) {
-					login();
-//					Intent intent = new Intent(getApplicationContext(),
-//							MainActivity.class);
-//					startActivity(intent);
-				} else {
-					Toast.makeText(getApplicationContext(), result,
-							Toast.LENGTH_LONG).show();
-				}
+	}
+
+	private void checkResult(String result) {
+		if (result != null && result.matches("-?\\d+")) {
+			int key = Integer.valueOf(result);
+			switch (key) {
+			case RESPONSE_CODE_SUCCESS:
+				login();
+				break;
+			case RESPONSE_CODE_EMPTY_FIELDS:
+				Toast.makeText(getApplicationContext(),
+						"Please fill in required fields.", Toast.LENGTH_LONG)
+						.show();
+				break;
+			case RESPONSE_CODE_INVALID_DATA:
+				Toast.makeText(getApplicationContext(),
+						"You entered invalid user data. Please try again.",
+						Toast.LENGTH_LONG).show();
+				break;
+			case RESPONSE_CODE_NO_GET:
+				Toast.makeText(getApplicationContext(),
+						"ERROR while trying to connect to server!",
+						Toast.LENGTH_LONG).show();
+				break;
+			default:
+				break;
 			}
 		}
+		Toast.makeText(getApplicationContext(), result,
+				Toast.LENGTH_LONG).show();
 	}
 
 	public void initElements() {
@@ -133,36 +135,6 @@ public class LogInActivity extends Activity {
 		tv_signup_link = (TextView) findViewById(R.id.tv_signup_link);
 	}
 
-	private String createGetParameters() {
-		String email = et_email.getText().toString();
-		String password = et_password.getText().toString();
-		String result = "?email=" + email + "&password=" + password;
-		return result;
-	}
-
-	private String createFullUri() {
-		String file = "check_login.php";
-		String uri = "http://10.0.2.2:80/development/examples/registration_form/backend_android/";
-		String fullUri = uri + file + createGetParameters();
-
-		return fullUri;
-	}
-
-	private String convertStreamToString(InputStream is) {
-		String line = "";
-		StringBuilder sb = new StringBuilder();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-		try {
-			while ((line = rd.readLine()) != null) {
-				sb.append(line);
-			}
-		} catch (Exception e) {
-			Toast.makeText(this, "Stream Exception", Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		}
-		return sb.toString();
-	}
-	
 	public void login() {
 		Editor editor = sharedPreferences.edit();
 		String email = et_email.getText().toString();
@@ -173,6 +145,42 @@ public class LogInActivity extends Activity {
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 	}
+
+//	private String createParams() {
+//		// String email = et_email.getText().toString();
+//		// boolean validEmail = validateEmail(email);
+//		// String password = et_password.getText().toString();
+//		// if (validEmail) {
+//		// return "?email=" + email + "&password=" + password;
+//		// }else {
+//		// // TODO email validierung
+//		// return "?email=&password=";
+//		// }
+//		String email = et_email.getText().toString();
+//		String password = et_password.getText().toString();
+//		return "?email=" + email + "&password=" + password;
+//	}
+	
+	public List<NameValuePair> createParams() {
+		List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+
+		String email = et_email.getText().toString();
+		String password = et_password.getText().toString();
+		
+		params.add(new BasicNameValuePair("email", email));
+		params.add(new BasicNameValuePair("password", password));
+
+		return params;
+	}
+
+	// private boolean validateEmail(String email) {
+	// String validEmail = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+	//
+	// Pattern pattern = Pattern.compile(validEmail);
+	// Matcher matcher = pattern.matcher(email);
+	//
+	// return matcher.matches();
+	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
