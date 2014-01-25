@@ -1,5 +1,6 @@
-package de.canberk.uni.cd_aap;
+package de.canberk.uni.cd_aap.activities;
 
+import de.canberk.uni.cd_aap.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
