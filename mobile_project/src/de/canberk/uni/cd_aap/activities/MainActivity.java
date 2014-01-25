@@ -12,11 +12,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import de.canberk.uni.cd_aap.R;
+import de.canberk.uni.cd_aap.UserSettingsActivity;
 
 public class MainActivity extends Activity {
 
-	private Button btn_logout;
 	private TextView tv_welcome;
+	private Button btn_logout;
+	private Button btn_settings;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,15 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main_screen);
 		initElements();
 		tv_welcome.setText(getUser());
+		
+		btn_settings.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(v.getContext(), UserSettingsActivity.class);
+				startActivity(intent);
+			}
+		});
 
 		btn_logout.setOnClickListener(new OnClickListener() {
 
@@ -32,11 +44,14 @@ public class MainActivity extends Activity {
 				logout();
 			}
 		});
+		
 	}
 
 	public void initElements() {
-		btn_logout = (Button) findViewById(R.id.btn_logout);
 		tv_welcome = (TextView) findViewById(R.id.tv_welcome);
+		btn_logout = (Button) findViewById(R.id.btn_logout);
+		btn_settings = (Button) findViewById(R.id.btn_settings);
+		
 	}
 	
 	public String getUser() {

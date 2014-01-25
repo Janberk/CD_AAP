@@ -37,6 +37,10 @@
             android:name="de.canberk.uni.cd_aap.activities.SaveUserActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="de.canberk.uni.cd_aap.UserSettingsActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>
