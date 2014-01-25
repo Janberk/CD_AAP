@@ -1,16 +1,16 @@
 package de.canberk.uni.cd_aap.activities;
 
-import de.canberk.uni.cd_aap.R;
 import android.os.Bundle;
-import android.app.Activity;
+import android.preference.PreferenceActivity;
 import android.view.Menu;
+import de.canberk.uni.cd_aap.R;
 
-public class UserSettingsActivity extends Activity {
+public class UserSettingsActivity extends PreferenceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.user_settings_screen);
+		//setContentView(R.layout.user_settings_screen)
 	}
 
 	@Override
