@@ -15,5 +15,8 @@
     <string name="logo">Logo</string>
     <string name="sign_up_link">You don\'t have an account? Sign up here!</string>
     <string name="login_in_link">Go back to Login-Screen!</string>
+    <string name="movie_genre">Genre</string>
+    <string name="movie_title">Title</string>
+    <string name="cover">Cover</string>
 
 </resources>
