@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import de.canberk.uni.cd_aap.ListViewActivity;
 import de.canberk.uni.cd_aap.R;
 
 public class MainActivity extends Activity {

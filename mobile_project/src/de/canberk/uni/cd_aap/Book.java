@@ -1,8 +1,8 @@
 package de.canberk.uni.cd_aap;
 
-public class Movie extends Item {
+public class Book extends Item {
 
-	public Movie(String title) {
+	public Book(String title) {
 		super(title);
 	}
 
