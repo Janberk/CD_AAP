@@ -57,6 +57,8 @@ public class LogInActivity extends Activity {
 
 		httpPost = new HTTPRequestHandler(
 				"http://10.0.2.2:80/development/examples/registration_form/backend_android/check_login.php");
+//		httpPost = new HTTPRequestHandler(
+//				"http://192.168.1.50:80/development/examples/registration_form/backend_android/check_login.php");
 
 		btn_login.setOnClickListener(new OnClickListener() {
 
@@ -194,7 +196,7 @@ public class LogInActivity extends Activity {
 				int count) {
 			boolean validEmail = validateEmail(et_email.getText().toString());
 
-			if (!validEmail && editTextNotEmpty(et_email)) {
+			if (!validEmail && editTextIsEmpty(et_email)) {
 				et_email.setError("Invalid Email!");
 			}
 		}
@@ -213,11 +215,11 @@ public class LogInActivity extends Activity {
 		}
 	}
 
-	public boolean editTextNotEmpty(EditText edittext) {
+	public boolean editTextIsEmpty(EditText edittext) {
 		if (edittext.getText().toString().trim().length() < 1) {
-			return false;
-		} else {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
