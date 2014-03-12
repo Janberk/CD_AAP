@@ -8,7 +8,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	// database details
 	private static final int DATABASE_VERSION = 1;
-	private static final String DATABASE_NAME = "android_db.db";
+	private static final String DATABASE_NAME = "cdaap_android_db.db";
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
