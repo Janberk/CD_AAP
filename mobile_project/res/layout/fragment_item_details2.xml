@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/container1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <FrameLayout
+                android:id="@+id/frameLayoutCover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_margin" >
+
+                <ImageView
+                    android:id="@+id/iv_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/cover"
+                    android:src="@drawable/ic_launcher" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutDetails1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="@dimen/app_margin"
+                android:layout_toRightOf="@+id/frameLayoutCover"
+                android:orientation="vertical" >
+
+                <EditText
+                    android:id="@+id/et_detailsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title" >
+
+                    <requestFocus />
+                </EditText>
+
+                <EditText
+                    android:id="@+id/et_detailsGenre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/genre" >
+                </EditText>
+
+                <Spinner
+                    android:id="@+id/spinner_itemType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <CheckBox
+                    android:id="@+id/cb_detailsFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/favorite" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/container2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/container1"
+            android:layout_margin="@dimen/app_margin"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/et_itemContent"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:ems="10"
+                android:hint="@string/content"
+                android:inputType="textMultiLine" />
+
+            <Button
+                android:id="@+id/btn_detailsEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit" />
+
+            <Button
+                android:id="@+id/btn_detailsSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>
