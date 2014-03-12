@@ -219,17 +219,22 @@ public class ItemListFragment extends ListFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
 
 		switch (item.getItemId()) {
+		case R.id.menuItem_list:
+			Fragment01 frag01 = new Fragment01();
+			fragmentTransaction.replace(android.R.id.content, frag01);
+			fragmentTransaction.commit();
+			return true;
 		case R.id.menuItem_logout:
 			Toast.makeText(getActivity(), "Logout", Toast.LENGTH_LONG).show();
 			logout();
 			return true;
 
 		case R.id.menuItem_delete:
-			FragmentManager fm = getActivity().getSupportFragmentManager();
-			TestFragment frag = new TestFragment();
-			fm.beginTransaction().add(R.id.testFragment, frag).commit();
 			Toast.makeText(getActivity(), "Delete", Toast.LENGTH_LONG).show();
 			return true;
 

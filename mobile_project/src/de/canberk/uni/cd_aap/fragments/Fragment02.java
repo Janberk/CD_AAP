@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import de.canberk.uni.cd_aap.R;
 
-public class TestFragment extends Fragment {
+public class Fragment02 extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.test_fragment, null);
+		View view = inflater.inflate(R.layout.fragment02, null);
 		return view;
 	}
 
