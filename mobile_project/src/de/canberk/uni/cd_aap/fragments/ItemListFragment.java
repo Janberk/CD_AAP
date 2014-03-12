@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -226,6 +227,9 @@ public class ItemListFragment extends ListFragment {
 			return true;
 
 		case R.id.menuItem_delete:
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			TestFragment frag = new TestFragment();
+			fm.beginTransaction().add(R.id.testFragment, frag).commit();
 			Toast.makeText(getActivity(), "Delete", Toast.LENGTH_LONG).show();
 			return true;
 
