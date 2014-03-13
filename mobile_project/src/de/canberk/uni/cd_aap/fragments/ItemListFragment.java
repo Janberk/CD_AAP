@@ -8,15 +8,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -34,12 +35,15 @@ import de.canberk.uni.cd_aap.util.ItemAdapter;
 import de.canberk.uni.cd_aap.util.ItemType;
 import de.canberk.uni.cd_aap.util.Logger;
 
-public class ItemListFragment extends ListFragment {
+public class ItemListFragment extends Fragment {
+
+	public static final String LIST_TAG = "de.canberk.uni.cd_aap.list_tag";
 
 	private static final String CREATE_NEW_ITEM = "create_new_item";
 
 	public static final int REQUEST_CODE = 0;
 
+	private SelectListFragment selectList = new SelectListFragment();;
 	private Logger log = new Logger();
 	private DAOItem daoItem;
 
@@ -53,26 +57,54 @@ public class ItemListFragment extends ListFragment {
 	private String titleOfNewItem = null;
 	private int idOfNewItem = 0;
 
+	private String tag = null;
+
+	public static ItemListFragment newItemListFragment(String tag) {
+
+		Bundle passedData = new Bundle();
+		passedData.putSerializable(LIST_TAG, tag);
+
+		ItemListFragment itemListFragment = new ItemListFragment();
+		itemListFragment.setArguments(passedData);
+
+		return itemListFragment;
+
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setHasOptionsMenu(true);
 
-		AllItems allItems = AllItems.get(getActivity());
+		Bundle bundle = getArguments();
 
+		if (bundle == null) {
+			tag = SelectListFragment.TAG_ALL;
+		} else {
+			tag = (String) bundle.get(LIST_TAG);
+		}
+		AllItems allItems = AllItems.get(getActivity());
 		daoItem = allItems.getDaoItem();
 		daoItem.open();
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		// Wenn UI-Elemente benutzt werden, muss der Code in onActivityCreated
-		// stehen.
-		listView = getListView();
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_list_view, null);
 
-		itemList = daoItem.getAllItems();
+		listView = (ListView) view.findViewById(R.id.itemList);
+
+		if (tag.equals(SelectListFragment.TAG_ALL)) {
+			itemList = daoItem.getAllItems();
+		} else if (tag.equals(SelectListFragment.TAG_ALBUM)) {
+			itemList = daoItem.getItemsByType(ItemType.Album);
+		} else if (tag.equals(SelectListFragment.TAG_BOOK)) {
+			itemList = daoItem.getItemsByType(ItemType.Book);
+		} else if (tag.equals(SelectListFragment.TAG_MOVIE)) {
+			itemList = daoItem.getItemsByType(ItemType.Movie);
+		}
 
 		for (Item item : itemList) {
 			log.info(item.toString());
@@ -82,13 +114,19 @@ public class ItemListFragment extends ListFragment {
 		adapter.setNotifyOnChange(true);
 
 		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-	}
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View view,
+					int position, long id) {
+				Item clickedItem = (Item) listView.getAdapter().getItem(
+						position);
+				Intent newIntent = new Intent(getActivity(), Z_App.class);
+				newIntent.putExtra(ItemFragment.ITEM_ID, clickedItem.getId());
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_list_view, null);
+				startActivityForResult(newIntent, 0);
+			}
+		});
 
 		et_newItemTitle = (EditText) view.findViewById(R.id.et_newItemTitle);
 
@@ -117,18 +155,6 @@ public class ItemListFragment extends ListFragment {
 		});
 
 		return view;
-	}
-
-	@Override
-	public void onListItemClick(ListView listView, View view, int position,
-			long id) {
-
-		Item clickedItem = (Item) listView.getAdapter().getItem(position);
-		Intent newIntent = new Intent(getActivity(), Z_App.class);
-		newIntent.putExtra(ItemFragment.ITEM_ID, clickedItem.getId());
-
-		startActivityForResult(newIntent, 0);
-
 	}
 
 	@Override
@@ -207,7 +233,15 @@ public class ItemListFragment extends ListFragment {
 	public void onResume() {
 		daoItem.open();
 		itemList.clear();
-		itemList.addAll(daoItem.getAllItems());
+		if (tag.equals(SelectListFragment.TAG_ALL)) {
+			itemList.addAll(daoItem.getAllItems());
+		} else if (tag.equals(SelectListFragment.TAG_ALBUM)) {
+			itemList.addAll(daoItem.getItemsByType(ItemType.Album));
+		} else if (tag.equals(SelectListFragment.TAG_BOOK)) {
+			itemList.addAll(daoItem.getItemsByType(ItemType.Book));
+		} else if (tag.equals(SelectListFragment.TAG_MOVIE)) {
+			itemList.addAll(daoItem.getItemsByType(ItemType.Movie));
+		}
 		adapter.refresh(itemList);
 		super.onResume();
 	}
@@ -223,12 +257,14 @@ public class ItemListFragment extends ListFragment {
 		FragmentTransaction fragmentTransaction = fragmentManager
 				.beginTransaction();
 
+		int containerId = ((ViewGroup) (getView().getParent())).getId();
+
 		switch (item.getItemId()) {
 		case R.id.menuItem_list:
-			Fragment01 frag01 = new Fragment01();
-			fragmentTransaction.replace(android.R.id.content, frag01);
+			fragmentTransaction.replace(containerId, selectList);
 			fragmentTransaction.commit();
 			return true;
+
 		case R.id.menuItem_logout:
 			Toast.makeText(getActivity(), "Logout", Toast.LENGTH_LONG).show();
 			logout();

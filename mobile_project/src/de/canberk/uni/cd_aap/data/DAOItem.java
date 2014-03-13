@@ -180,4 +180,18 @@ public class DAOItem {
 		return false;
 	}
 
+	public ArrayList<Item> getItemsByType(ItemType type) {
+		ArrayList<Item> pre = getAllItems();
+		ArrayList<Item> result = new ArrayList<Item>();
+		ItemType fetchedType = null;
+
+		for (Item item : pre) {
+			fetchedType = item.getType();
+			if (fetchedType == type) {
+				result.add(item);
+			}
+		}
+		return result;
+	}
+
 }
