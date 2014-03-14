@@ -56,13 +56,16 @@ public class ItemListFragment extends Fragment {
 
 	private String titleOfNewItem = null;
 	private int idOfNewItem = 0;
+	
+	private String createdBy;
 
 	private String tag = null;
 
-	public static ItemListFragment newItemListFragment(String tag) {
+	public static ItemListFragment newItemListFragment(String listTag) {
 
 		Bundle passedData = new Bundle();
-		passedData.putSerializable(LIST_TAG, tag);
+		passedData.putSerializable(LIST_TAG, listTag);
+		
 
 		ItemListFragment itemListFragment = new ItemListFragment();
 		itemListFragment.setArguments(passedData);
@@ -74,6 +77,8 @@ public class ItemListFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		createdBy = getUser();
 
 		setHasOptionsMenu(true);
 
@@ -84,7 +89,7 @@ public class ItemListFragment extends Fragment {
 		} else {
 			tag = (String) bundle.get(LIST_TAG);
 		}
-		AllItems allItems = AllItems.get(getActivity());
+		AllItems allItems = AllItems.get(getActivity(), createdBy);
 		daoItem = allItems.getDaoItem();
 		daoItem.open();
 	}
@@ -97,13 +102,13 @@ public class ItemListFragment extends Fragment {
 		listView = (ListView) view.findViewById(R.id.itemList);
 
 		if (tag.equals(SelectListFragment.TAG_ALL)) {
-			itemList = daoItem.getAllItems();
+			itemList = daoItem.getAllItems(createdBy);
 		} else if (tag.equals(SelectListFragment.TAG_ALBUM)) {
-			itemList = daoItem.getItemsByType(ItemType.Album);
+			itemList = daoItem.getItemsByType(ItemType.Album, createdBy);
 		} else if (tag.equals(SelectListFragment.TAG_BOOK)) {
-			itemList = daoItem.getItemsByType(ItemType.Book);
+			itemList = daoItem.getItemsByType(ItemType.Book, createdBy);
 		} else if (tag.equals(SelectListFragment.TAG_MOVIE)) {
-			itemList = daoItem.getItemsByType(ItemType.Movie);
+			itemList = daoItem.getItemsByType(ItemType.Movie, createdBy);
 		}
 
 		for (Item item : itemList) {
@@ -183,15 +188,15 @@ public class ItemListFragment extends Fragment {
 
 		switch (type) {
 		case Album:
-			item = new MusicAlbum(titleOfNewItem, typeAsString, "", false);
+			item = new MusicAlbum(createdBy, titleOfNewItem, typeAsString, "", false);
 			item.setId(idOfNewItem);
 			break;
 		case Book:
-			item = new Book(titleOfNewItem, typeAsString, "", false);
+			item = new Book(createdBy, titleOfNewItem, typeAsString, "", false);
 			item.setId(idOfNewItem);
 			break;
 		case Movie:
-			item = new Movie(titleOfNewItem, typeAsString, "", false);
+			item = new Movie(createdBy, titleOfNewItem, typeAsString, "", false);
 			item.setId(idOfNewItem);
 			break;
 
@@ -234,13 +239,13 @@ public class ItemListFragment extends Fragment {
 		daoItem.open();
 		itemList.clear();
 		if (tag.equals(SelectListFragment.TAG_ALL)) {
-			itemList.addAll(daoItem.getAllItems());
+			itemList.addAll(daoItem.getAllItems(createdBy));
 		} else if (tag.equals(SelectListFragment.TAG_ALBUM)) {
-			itemList.addAll(daoItem.getItemsByType(ItemType.Album));
+			itemList.addAll(daoItem.getItemsByType(ItemType.Album, createdBy));
 		} else if (tag.equals(SelectListFragment.TAG_BOOK)) {
-			itemList.addAll(daoItem.getItemsByType(ItemType.Book));
+			itemList.addAll(daoItem.getItemsByType(ItemType.Book, createdBy));
 		} else if (tag.equals(SelectListFragment.TAG_MOVIE)) {
-			itemList.addAll(daoItem.getItemsByType(ItemType.Movie));
+			itemList.addAll(daoItem.getItemsByType(ItemType.Movie, createdBy));
 		}
 		adapter.refresh(itemList);
 		super.onResume();

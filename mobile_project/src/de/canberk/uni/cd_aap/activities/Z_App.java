@@ -11,8 +11,10 @@ public class Z_App extends FragmentActivityBuilder {
 
 		int itemId = (Integer) getIntent().getSerializableExtra(
 				ItemFragment.ITEM_ID);
+		String userTag = (String) getIntent().getSerializableExtra(
+				ItemFragment.USER_TAG);
 
-		return new ItemFragment().newItemFragment(itemId);
+		return new ItemFragment().newItemFragment(itemId, userTag);
 
 	}
 

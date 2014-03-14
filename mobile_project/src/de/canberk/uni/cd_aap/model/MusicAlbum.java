@@ -8,13 +8,13 @@ public class MusicAlbum extends Item {
 		super();
 	}
 
-	public MusicAlbum(String title, String type, String genre, boolean favorite) {
-		super(title, type, genre, favorite);
+	public MusicAlbum(String user, String title, String type, String genre, boolean favorite) {
+		super(user, title, type, genre, favorite);
 	}
 
-	public MusicAlbum(int id, String title, String type, String genre,
+	public MusicAlbum(int id, String user, String title, String type, String genre,
 			boolean favorite) {
-		super(id, title, type, genre, favorite);
+		super(id, user, title, type, genre, favorite);
 	}
 
 	// getters and setters
@@ -31,6 +31,7 @@ public class MusicAlbum extends Item {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("ID: " + getId() + "\n");
+		sb.append("Created by: " + getUser() + "\n");
 		sb.append("Title: " + getTitle() + "\n");
 		sb.append("Type: " + getType() + "\n");
 		sb.append("Genre: " + getGenre() + "\n");

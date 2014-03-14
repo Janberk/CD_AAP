@@ -18,13 +18,13 @@ public class AllItems {
 
 	private ArrayList<Item> itemList;
 
-	private AllItems(Context applicationContext) {
+	private AllItems(Context applicationContext, String user) {
 		this.applicationContext = applicationContext;
 
 		setDaoItem(new DAOItem(applicationContext));
 
 		if (daoItem != null) {
-			itemList = daoItem.getAllItems();
+			itemList = daoItem.getAllItems(user);
 		}
 
 	}
@@ -37,10 +37,10 @@ public class AllItems {
 		return list;
 	}
 
-	public static AllItems get(Context context) {
+	public static AllItems get(Context context, String user) {
 
 		if (allItems == null) {
-			allItems = new AllItems(context.getApplicationContext());
+			allItems = new AllItems(context.getApplicationContext(), user);
 		}
 		return allItems;
 

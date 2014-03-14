@@ -5,6 +5,7 @@ import de.canberk.uni.cd_aap.util.ItemType;
 public abstract class Item {
 
 	private int id;
+	private String user;
 	private boolean favorite;
 
 	private String title;
@@ -14,16 +15,18 @@ public abstract class Item {
 	public Item() {
 	}
 
-	public Item(String title, String type, String genre, boolean favorite) {
+	public Item(String user, String title, String type, String genre, boolean favorite) {
+		setUser(user);
 		setTitle(title);
 		setType(ItemType.valueOf(type));
 		setGenre(genre);
 		setFavorite(favorite);
 	}
 
-	public Item(int id, String title, String type, String genre,
+	public Item(int id, String user, String title, String type, String genre,
 			boolean favorite) {
 		setId(id);
+		setUser(user);
 		setTitle(title);
 		setType(ItemType.valueOf(type));
 		setGenre(genre);
@@ -37,6 +40,14 @@ public abstract class Item {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public String getTitle() {

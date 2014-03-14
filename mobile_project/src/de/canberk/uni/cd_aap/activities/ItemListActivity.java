@@ -9,14 +9,14 @@ public class ItemListActivity extends FragmentActivityBuilder {
 	@Override
 	protected Fragment createFragment() {
 
-		String tag = (String) getIntent().getSerializableExtra(
+		String listTag = (String) getIntent().getSerializableExtra(
 				ItemListFragment.LIST_TAG);
 
-		if (tag == null) {
+		if (listTag == null) {
 			return new ItemListFragment();
 		}
 
-		return new ItemListFragment().newItemListFragment(tag);
+		return new ItemListFragment().newItemListFragment(listTag);
 
 	}
 

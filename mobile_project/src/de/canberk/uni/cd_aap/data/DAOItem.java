@@ -25,15 +25,22 @@ public class DAOItem {
 	// table column names
 	private static final String ID = "_id";
 	private static final String TITLE = "title";
+	private static final String USER = "created_by";
 	private static final String TYPE = "type";
 	private static final String GENRE = "genre";
 	private static final String FAVORITE = "favorite";
 
 	// sql statement
 	public static final String CREATE_TABLE_ITEMS = "CREATE TABLE "
-			+ TABLE_ITEMS + "(" + ID + " INTEGER PRIMARY KEY," + TITLE
-			+ " TEXT," + TYPE + " TEXT," + GENRE + " TEXT," + FAVORITE
-			+ " INTEGER" + ")";
+			+ TABLE_ITEMS
+			+ "("
+			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ USER	+ " TEXT, "
+			+ TITLE	+ " TEXT, "
+			+ TYPE + " TEXT, "
+			+ GENRE + " TEXT, "
+			+ FAVORITE + " INTEGER"
+			+ ")";
 
 	// constructor
 	public DAOItem(Context context) {
@@ -53,6 +60,7 @@ public class DAOItem {
 	// adding new item
 	public long addItem(Item item) {
 		ContentValues values = new ContentValues();
+		values.put(USER, item.getUser());
 		values.put(TITLE, item.getTitle());
 		values.put(TYPE, item.getType().toString());
 		values.put(GENRE, item.getGenre());
@@ -68,7 +76,7 @@ public class DAOItem {
 
 		try {
 			Cursor cursor = sqliteDb
-					.query(TABLE_ITEMS, new String[] { ID, TITLE, TYPE, GENRE,
+					.query(TABLE_ITEMS, new String[] { ID, USER, TITLE, TYPE, GENRE,
 							FAVORITE }, ID + "=?",
 							new String[] { String.valueOf(id) }, null, null,
 							null, null);
@@ -85,9 +93,9 @@ public class DAOItem {
 	}
 
 	// get all items
-	public ArrayList<Item> getAllItems() {
+	public ArrayList<Item> getAllItems(String user) {
 		ArrayList<Item> itemList = new ArrayList<Item>();
-		String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
+		String selectQuery = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + USER + "=" + '"' + user + '"';
 
 		try {
 			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
@@ -111,6 +119,7 @@ public class DAOItem {
 	// update item
 	public boolean updateItem(Item item) {
 		ContentValues values = new ContentValues();
+		values.put(USER, item.getUser());
 		values.put(TITLE, item.getTitle());
 		values.put(TYPE, item.getType().toString());
 		values.put(GENRE, item.getGenre());
@@ -140,6 +149,7 @@ public class DAOItem {
 		Item item = null;
 
 		int iRow = cursor.getColumnIndex(ID);
+		int iUser = cursor.getColumnIndex(USER);
 		int iTitle = cursor.getColumnIndex(TITLE);
 		int iType = cursor.getColumnIndex(TYPE);
 		int iGenre = cursor.getColumnIndex(GENRE);
@@ -150,21 +160,22 @@ public class DAOItem {
 		int favoriteAsInt = (Integer.parseInt(cursor.getString(iFavorite)));
 
 		int id = Integer.parseInt(cursor.getString(iRow));
+		String user = cursor.getString(iUser);
 		String title = cursor.getString(iTitle);
 		String itemType = cursor.getString(iType);
 		String genre = cursor.getString(iGenre);
 
 		switch (type) {
 		case Album:
-			item = new MusicAlbum(id, title, itemType, genre,
+			item = new MusicAlbum(id, user, title, itemType, genre,
 					isFavorite(favoriteAsInt));
 			break;
 		case Book:
-			item = new Book(id, title, itemType, genre,
+			item = new Book(id, user, title, itemType, genre,
 					isFavorite(favoriteAsInt));
 			break;
 		case Movie:
-			item = new Movie(id, title, itemType, genre,
+			item = new Movie(id, user, title, itemType, genre,
 					isFavorite(favoriteAsInt));
 			break;
 		default:
@@ -180,8 +191,8 @@ public class DAOItem {
 		return false;
 	}
 
-	public ArrayList<Item> getItemsByType(ItemType type) {
-		ArrayList<Item> pre = getAllItems();
+	public ArrayList<Item> getItemsByType(ItemType type, String user) {
+		ArrayList<Item> pre = getAllItems(user);
 		ArrayList<Item> result = new ArrayList<Item>();
 		ItemType fetchedType = null;
 

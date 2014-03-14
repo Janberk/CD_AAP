@@ -27,7 +27,8 @@ import de.canberk.uni.cd_aap.util.Logger;
 
 public class ItemFragment extends Fragment implements OnItemSelectedListener {
 
-	public static final String ITEM_ID = "de.canberk.z_app.ID";
+	public static final String ITEM_ID = "de.canberk.uni.cd_aap.ID";
+	public static final String USER_TAG = "de.canberk.uni.cd_aap.user_tag";
 
 	public static final int ALBUM = 0;
 	public static final int BOOK = 1;
@@ -64,10 +65,11 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		btn_detailsSave = (Button) theView.findViewById(R.id.btn_detailsSave);
 	}
 
-	public static ItemFragment newItemFragment(int id) {
+	public static ItemFragment newItemFragment(int id, String userTag) {
 
 		Bundle passedData = new Bundle();
 		passedData.putSerializable(ITEM_ID, id);
+		passedData.putSerializable(USER_TAG, userTag);
 
 		ItemFragment itemFragment = new ItemFragment();
 		itemFragment.setArguments(passedData);
@@ -81,8 +83,9 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		super.onCreate(savedInstanceState);
 
 		int id = (Integer) getArguments().getSerializable(ITEM_ID);
+		String user = (String) getArguments().getSerializable(USER_TAG);
 
-		AllItems allItems = AllItems.get(getActivity());
+		AllItems allItems = AllItems.get(getActivity(), user);
 
 		daoItem = allItems.getDaoItem();
 		daoItem.open();
