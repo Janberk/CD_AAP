@@ -2,9 +2,12 @@ package de.canberk.uni.cd_aap.model;
 
 public class Movie extends Item {
 
+	private String producer;
 	private String director;
-	private String country;
-	private int year;
+	private String script;
+	private String actors;
+	private String music;
+	private int length; // in minutes
 
 	public Movie() {
 		super();
@@ -20,6 +23,14 @@ public class Movie extends Item {
 	}
 
 	// getters and setters
+	public String getProducer() {
+		return producer;
+	}
+
+	public void setProducer(String producer) {
+		this.producer = producer;
+	}
+
 	public String getDirector() {
 		return director;
 	}
@@ -28,20 +39,36 @@ public class Movie extends Item {
 		this.director = director;
 	}
 
-	public String getCountry() {
-		return country;
+	public String getScript() {
+		return script;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setScript(String script) {
+		this.script = script;
 	}
 
-	public int getYear() {
-		return year;
+	public String getActors() {
+		return actors;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
+	public void setActors(String actors) {
+		this.actors = actors;
+	}
+
+	public String getMusic() {
+		return music;
+	}
+
+	public void setMusic(String music) {
+		this.music = music;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
 	}
 
 	@Override
