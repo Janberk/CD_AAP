@@ -13,7 +13,8 @@ public class Movie extends Item {
 		super();
 	}
 
-	public Movie(String user, String title, String type, String genre, boolean favorite) {
+	public Movie(String user, String title, String type, String genre,
+			boolean favorite) {
 		super(user, title, type, genre, favorite);
 	}
 
@@ -76,11 +77,26 @@ public class Movie extends Item {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("ID: " + getId() + "\n");
+		sb.append("Creation date: " + getCreationDateAsString() + "\n");
+		sb.append("Deletion date: " + getDeletionDate() + "\n");
 		sb.append("Created by: " + getUser() + "\n");
 		sb.append("Title: " + getTitle() + "\n");
+		sb.append("Original title: " + getOriginalTitle() + "\n");
+		sb.append("Country: " + getCountry() + "\n");
+		sb.append("Year published: " + getYearPublished() + "\n");
 		sb.append("Type: " + getType() + "\n");
 		sb.append("Genre: " + getGenre() + "\n");
-		sb.append("Favorite: " + isFavorite() + "\n");
+		sb.append("Producer: " + getProducer() + "\n");
+		sb.append("Director: " + getDirector() + "\n");
+		sb.append("Actors: " + getActors() + "\n");
+		sb.append("Script: " + getScript() + "\n");
+		sb.append("Music: " + getMusic() + "\n");
+		sb.append("Length: " + getLength() + "\n");
+		sb.append("Content: " + getContent() + "\n");
+		sb.append("Favorite?: " + isFavorite() + "\n");
+		sb.append("Rating: " + getRating() + "\n");
+		sb.append("In Possession?: " + isInPossession() + "\n");
+		sb.append("Deleted: " + isDeleted() + "\n");
 
 		return sb.toString();
 	}

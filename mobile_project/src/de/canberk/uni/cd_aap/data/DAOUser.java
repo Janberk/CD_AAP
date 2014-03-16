@@ -15,23 +15,6 @@ public class DAOUser {
 	private SQLiteDatabase sqliteDb;
 	private DatabaseHelper dbHelper;
 
-	// table column names
-	private static final String ID = "_id";
-	private static final String FIRST_NAME = "firstname";
-	private static final String LAST_NAME = "lastname";
-	private static final String USER_NAME = "username";
-	private static final String EMAIL = "email";
-	private static final String PASSWORD = "password";
-
-	// table name
-	public static final String TABLE_USERS = "users";
-
-	// sql statement
-	public static final String CREATE_TABLE_USERS = "CREATE TABLE "
-			+ TABLE_USERS + "(" + ID + " INTEGER PRIMARY KEY," + FIRST_NAME
-			+ " TEXT," + LAST_NAME + " TEXT," + USER_NAME + " TEXT," + EMAIL
-			+ " TEXT," + PASSWORD + " TEXT" + ")";
-
 	// constructor
 	public DAOUser(Context context) {
 		this.context = context;
@@ -50,13 +33,13 @@ public class DAOUser {
 	// adding new user
 	public long addUser(User user) {
 		ContentValues values = new ContentValues();
-		values.put(FIRST_NAME, user.getFirstname());
-		values.put(LAST_NAME, user.getLastname());
-		values.put(USER_NAME, user.getUsername());
-		values.put(EMAIL, user.getEmail());
-		values.put(PASSWORD, user.getPassword());
+		values.put(ProjectConstants.FIRST_NAME, user.getFirstname());
+		values.put(ProjectConstants.LAST_NAME, user.getLastname());
+		values.put(ProjectConstants.USER_NAME, user.getUsername());
+		values.put(ProjectConstants.EMAIL, user.getEmail());
+		values.put(ProjectConstants.PASSWORD, user.getPassword());
 
-		return sqliteDb.insert(TABLE_USERS, null, values);
+		return sqliteDb.insert(ProjectConstants.TABLE_USERS, null, values);
 
 	}
 
@@ -65,10 +48,14 @@ public class DAOUser {
 		User user = null;
 
 		try {
-			Cursor cursor = sqliteDb.query(TABLE_USERS, new String[] { ID,
-					FIRST_NAME, LAST_NAME, USER_NAME, EMAIL, PASSWORD }, ID
-					+ "=?", new String[] { String.valueOf(id) }, null, null,
-					null, null);
+			Cursor cursor = sqliteDb.query(ProjectConstants.TABLE_USERS,
+					new String[] { ProjectConstants.ID,
+							ProjectConstants.FIRST_NAME,
+							ProjectConstants.LAST_NAME,
+							ProjectConstants.USER_NAME, ProjectConstants.EMAIL,
+							ProjectConstants.PASSWORD }, ProjectConstants.ID
+							+ "=?", new String[] { String.valueOf(id) }, null,
+					null, null, null);
 
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -84,7 +71,7 @@ public class DAOUser {
 	// get all users
 	public ArrayList<User> getAllUsers() {
 		ArrayList<User> userList = new ArrayList<User>();
-		String selectQuery = "SELECT * FROM " + TABLE_USERS;
+		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_USERS;
 
 		try {
 			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
@@ -108,25 +95,26 @@ public class DAOUser {
 	// update user
 	public boolean updateUser(User user) {
 		ContentValues values = new ContentValues();
-		values.put(FIRST_NAME, user.getFirstname());
-		values.put(LAST_NAME, user.getLastname());
-		values.put(USER_NAME, user.getUsername());
-		values.put(EMAIL, user.getEmail());
-		values.put(PASSWORD, user.getPassword());
+		values.put(ProjectConstants.FIRST_NAME, user.getFirstname());
+		values.put(ProjectConstants.LAST_NAME, user.getLastname());
+		values.put(ProjectConstants.USER_NAME, user.getUsername());
+		values.put(ProjectConstants.EMAIL, user.getEmail());
+		values.put(ProjectConstants.PASSWORD, user.getPassword());
 
-		return sqliteDb.update(TABLE_USERS, values, ID + " = " + user.getId(),
-				null) > 0;
+		return sqliteDb.update(ProjectConstants.TABLE_USERS, values,
+				ProjectConstants.ID + " = " + user.getId(), null) > 0;
 	}
 
 	// delete user
 	public boolean deleteUser(User user) {
-		return sqliteDb.delete(TABLE_USERS, ID + " = " + user.getId(), null) > 0;
+		return sqliteDb.delete(ProjectConstants.TABLE_USERS,
+				ProjectConstants.ID + " = " + user.getId(), null) > 0;
 	}
 
 	// get user count
 	public int getUserCount() {
 		int count;
-		String countQuery = "SELECT  * FROM " + TABLE_USERS;
+		String countQuery = "SELECT  * FROM " + ProjectConstants.TABLE_USERS;
 		Cursor cursor = sqliteDb.rawQuery(countQuery, null);
 		count = cursor.getCount();
 		cursor.close();
@@ -135,12 +123,12 @@ public class DAOUser {
 	}
 
 	public User createUser(Cursor cursor) {
-		int iRow = cursor.getColumnIndex(ID);
-		int iFirstName = cursor.getColumnIndex(FIRST_NAME);
-		int iLastName = cursor.getColumnIndex(LAST_NAME);
-		int iUserName = cursor.getColumnIndex(USER_NAME);
-		int iEmail = cursor.getColumnIndex(EMAIL);
-		int iPassword = cursor.getColumnIndex(PASSWORD);
+		int iRow = cursor.getColumnIndex(ProjectConstants.ID);
+		int iFirstName = cursor.getColumnIndex(ProjectConstants.FIRST_NAME);
+		int iLastName = cursor.getColumnIndex(ProjectConstants.LAST_NAME);
+		int iUserName = cursor.getColumnIndex(ProjectConstants.USER_NAME);
+		int iEmail = cursor.getColumnIndex(ProjectConstants.EMAIL);
+		int iPassword = cursor.getColumnIndex(ProjectConstants.PASSWORD);
 
 		int id = Integer.parseInt(cursor.getString(iRow));
 		String firstName = cursor.getString(iFirstName);

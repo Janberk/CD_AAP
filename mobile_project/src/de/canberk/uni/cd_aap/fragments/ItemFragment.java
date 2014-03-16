@@ -18,6 +18,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.data.DAOItem;
 import de.canberk.uni.cd_aap.model.Item;
@@ -198,7 +199,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 
 			@Override
 			public void onClick(View v) {
-				// TODO edit state einbauen
+				Toast.makeText(getActivity(), item.getCreationDate().toString(), Toast.LENGTH_LONG).show();
 
 			}
 		});

@@ -19,29 +19,6 @@ public class DAOItem {
 	private SQLiteDatabase sqliteDb;
 	private DatabaseHelper dbHelper;
 
-	// table name
-	public static final String TABLE_ITEMS = "items";
-
-	// table column names
-	private static final String ID = "_id";
-	private static final String TITLE = "title";
-	private static final String USER = "created_by";
-	private static final String TYPE = "type";
-	private static final String GENRE = "genre";
-	private static final String FAVORITE = "favorite";
-
-	// sql statement
-	public static final String CREATE_TABLE_ITEMS = "CREATE TABLE "
-			+ TABLE_ITEMS
-			+ "("
-			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ USER	+ " TEXT, "
-			+ TITLE	+ " TEXT, "
-			+ TYPE + " TEXT, "
-			+ GENRE + " TEXT, "
-			+ FAVORITE + " INTEGER"
-			+ ")";
-
 	// constructor
 	public DAOItem(Context context) {
 		this.context = context;
@@ -60,30 +37,35 @@ public class DAOItem {
 	// adding new item
 	public long addItem(Item item) {
 		ContentValues values = new ContentValues();
-		values.put(USER, item.getUser());
-		values.put(TITLE, item.getTitle());
-		values.put(TYPE, item.getType().toString());
-		values.put(GENRE, item.getGenre());
-		values.put(FAVORITE, item.isFavoriteAsInteger());
+		putValues(item, values);
 
-		return sqliteDb.insert(TABLE_ITEMS, null, values);
-
+		return sqliteDb.insert(ProjectConstants.TABLE_ITEMS, null, values);
 	}
-
-	// get item
+	
 	public Item getItem(int id) {
 		Item item = null;
+//		Cursor cursor = sqliteDb
+//		.query(ProjectConstants.TABLE_ITEMS,
+//				new String[] { ProjectConstants.ID,
+//						ProjectConstants.USER,
+//						ProjectConstants.TITLE,
+//						ProjectConstants.TYPE,
+//						ProjectConstants.GENRE,
+//						ProjectConstants.FAVORITE,
+//						ProjectConstants.IN_POSSESSION,
+//						ProjectConstants.DELETED },
+//				ProjectConstants.ID + "=?",
+//				new String[] { String.valueOf(id) }, null, null,
+//				null, null);
+		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_ITEMS
+				+ " WHERE " + ProjectConstants.ID + "=" + '"' + id + '"';
 
 		try {
-			Cursor cursor = sqliteDb
-					.query(TABLE_ITEMS, new String[] { ID, USER, TITLE, TYPE, GENRE,
-							FAVORITE }, ID + "=?",
-							new String[] { String.valueOf(id) }, null, null,
-							null, null);
+			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
 
 			if (cursor != null) {
 				cursor.moveToFirst();
-				item = createItem(cursor);
+				item = createItemFromTableValues(cursor);
 			}
 
 		} catch (Exception e) {
@@ -95,7 +77,8 @@ public class DAOItem {
 	// get all items
 	public ArrayList<Item> getAllItems(String user) {
 		ArrayList<Item> itemList = new ArrayList<Item>();
-		String selectQuery = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + USER + "=" + '"' + user + '"';
+		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_ITEMS
+				+ " WHERE " + ProjectConstants.USER + "=" + '"' + user + '"';
 
 		try {
 			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
@@ -104,7 +87,7 @@ public class DAOItem {
 
 				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
 						.moveToNext()) {
-					Item item = createItem(cursor);
+					Item item = createItemFromTableValues(cursor);
 
 					itemList.add(0, item);
 				}
@@ -119,78 +102,30 @@ public class DAOItem {
 	// update item
 	public boolean updateItem(Item item) {
 		ContentValues values = new ContentValues();
-		values.put(USER, item.getUser());
-		values.put(TITLE, item.getTitle());
-		values.put(TYPE, item.getType().toString());
-		values.put(GENRE, item.getGenre());
-		values.put(FAVORITE, item.isFavoriteAsInteger());
+		putValues(item, values);
 
-		return sqliteDb.update(TABLE_ITEMS, values, ID + " = " + item.getId(),
-				null) > 0;
+		return sqliteDb.update(ProjectConstants.TABLE_ITEMS, values,
+				ProjectConstants.ID + " = " + item.getId(), null) > 0;
 	}
 
 	// delete item
 	public boolean deleteItem(Item item) {
-		return sqliteDb.delete(TABLE_ITEMS, ID + " = " + item.getId(), null) > 0;
+		return sqliteDb.delete(ProjectConstants.TABLE_ITEMS,
+				ProjectConstants.ID + " = " + item.getId(), null) > 0;
 	}
 
 	// get item count
 	public int getItemCount() {
 		int count;
-		String countQuery = "SELECT  * FROM " + TABLE_ITEMS;
+		String countQuery = "SELECT  * FROM " + ProjectConstants.TABLE_ITEMS;
 		Cursor cursor = sqliteDb.rawQuery(countQuery, null);
 		count = cursor.getCount();
 		cursor.close();
 
 		return count;
 	}
-
-	public Item createItem(Cursor cursor) {
-		Item item = null;
-
-		int iRow = cursor.getColumnIndex(ID);
-		int iUser = cursor.getColumnIndex(USER);
-		int iTitle = cursor.getColumnIndex(TITLE);
-		int iType = cursor.getColumnIndex(TYPE);
-		int iGenre = cursor.getColumnIndex(GENRE);
-		int iFavorite = cursor.getColumnIndex(FAVORITE);
-
-		ItemType type = ItemType.valueOf(cursor.getString(iType));
-
-		int favoriteAsInt = (Integer.parseInt(cursor.getString(iFavorite)));
-
-		int id = Integer.parseInt(cursor.getString(iRow));
-		String user = cursor.getString(iUser);
-		String title = cursor.getString(iTitle);
-		String itemType = cursor.getString(iType);
-		String genre = cursor.getString(iGenre);
-
-		switch (type) {
-		case Album:
-			item = new MusicAlbum(id, user, title, itemType, genre,
-					isFavorite(favoriteAsInt));
-			break;
-		case Book:
-			item = new Book(id, user, title, itemType, genre,
-					isFavorite(favoriteAsInt));
-			break;
-		case Movie:
-			item = new Movie(id, user, title, itemType, genre,
-					isFavorite(favoriteAsInt));
-			break;
-		default:
-			break;
-		}
-		return item;
-	}
-
-	public boolean isFavorite(int favoriteAsInt) {
-		if (favoriteAsInt == 1) {
-			return true;
-		}
-		return false;
-	}
-
+	
+	// get items by specified type
 	public ArrayList<Item> getItemsByType(ItemType type, String user) {
 		ArrayList<Item> pre = getAllItems(user);
 		ArrayList<Item> result = new ArrayList<Item>();
@@ -203,6 +138,96 @@ public class DAOItem {
 			}
 		}
 		return result;
+	}
+
+	public Item createItemFromTableValues(Cursor cursor) {
+		Item item = null;
+
+		int iRow = cursor.getColumnIndex(ProjectConstants.ID);
+		int iCreationDate = cursor.getColumnIndex(ProjectConstants.CREATION_DATE);
+		int iUser = cursor.getColumnIndex(ProjectConstants.USER);
+		int iTitle = cursor.getColumnIndex(ProjectConstants.TITLE);
+		int iType = cursor.getColumnIndex(ProjectConstants.TYPE);
+		int iGenre = cursor.getColumnIndex(ProjectConstants.GENRE);
+		int iFavorite = cursor.getColumnIndex(ProjectConstants.FAVORITE);
+		int iInPossession = cursor
+				.getColumnIndex(ProjectConstants.IN_POSSESSION);
+		int iDeleted = cursor.getColumnIndex(ProjectConstants.DELETED);
+
+		ItemType type = ItemType.valueOf(cursor.getString(iType));
+
+		int favoriteAsInt = (Integer.parseInt(cursor.getString(iFavorite)));
+		int inPossessionAsInt = (Integer.parseInt(cursor
+				.getString(iInPossession)));
+		int deletedAsInt = (Integer.parseInt(cursor.getString(iDeleted)));
+
+		int id = Integer.parseInt(cursor.getString(iRow));
+		String creationDate = cursor.getString(iCreationDate);
+		String user = cursor.getString(iUser);
+		String title = cursor.getString(iTitle);
+		String itemType = cursor.getString(iType);
+		String genre = cursor.getString(iGenre);
+
+		switch (type) {
+		case Album:
+			item = new MusicAlbum(id, user, title, itemType, genre,
+					isTrue(favoriteAsInt));
+			break;
+		case Book:
+			item = new Book(id, user, title, itemType, genre,
+					isTrue(favoriteAsInt));
+			break;
+		case Movie:
+			item = new Movie(id, user, title, itemType, genre,
+					isTrue(favoriteAsInt));
+			break;
+		default:
+			break;
+		}
+		item.setCreationDateFromString(creationDate);
+		item.setInPossession(isTrue(inPossessionAsInt));
+		item.setDeleted(isTrue(deletedAsInt));
+		return item;
+	}
+
+	public boolean isTrue(int valueToCheck) {
+		if (valueToCheck == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void putValues(Item item, ContentValues values) {
+		values.put(ProjectConstants.USER, item.getUser());
+		values.put(ProjectConstants.CREATION_DATE, item.getCreationDateAsString());
+		values.put(ProjectConstants.TITLE, item.getTitle());
+		values.put(ProjectConstants.TYPE, item.getType().toString());
+		values.put(ProjectConstants.GENRE, item.getGenre());
+		values.put(ProjectConstants.IN_POSSESSION,
+				item.isInPossessionAsInteger());
+		values.put(ProjectConstants.FAVORITE, item.isFavoriteAsInteger());
+		values.put(ProjectConstants.DELETED, item.isDeletedAsInteger());
+		values.put(ProjectConstants.DELETION_DATE, item.isDeletedAsInteger());
+		values.put(ProjectConstants.ORIGINAL_TITLE, item.isDeletedAsInteger());
+		values.put(ProjectConstants.COUNTRY, item.isDeletedAsInteger());
+		values.put(ProjectConstants.YEAR_PUBLISHED, item.isDeletedAsInteger());
+		values.put(ProjectConstants.CONTENT, item.isDeletedAsInteger());
+		values.put(ProjectConstants.RATING, item.isDeletedAsInteger());
+		values.put(ProjectConstants.PRODUCER, item.isDeletedAsInteger());
+		values.put(ProjectConstants.DIRECTOR, item.isDeletedAsInteger());
+		values.put(ProjectConstants.SCRIPT, item.isDeletedAsInteger());
+		values.put(ProjectConstants.ACTORS, item.isDeletedAsInteger());
+		values.put(ProjectConstants.MUSIC, item.isDeletedAsInteger());
+		values.put(ProjectConstants.LENGTH, item.isDeletedAsInteger());
+		values.put(ProjectConstants.LABEL, item.isDeletedAsInteger());
+		values.put(ProjectConstants.STUDIO, item.isDeletedAsInteger());
+		values.put(ProjectConstants.ARTIST, item.isDeletedAsInteger());
+		values.put(ProjectConstants.FORMAT, item.isDeletedAsInteger());
+		values.put(ProjectConstants.TITLE_COUNT, item.isDeletedAsInteger());
+		values.put(ProjectConstants.EDITION, item.isDeletedAsInteger());
+		values.put(ProjectConstants.PUBLISHING_HOUSE, item.isDeletedAsInteger());
+		values.put(ProjectConstants.AUTHOR, item.isDeletedAsInteger());
+		values.put(ProjectConstants.ISBN, item.isDeletedAsInteger());		
 	}
 
 }

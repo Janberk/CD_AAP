@@ -17,15 +17,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	// creating tables
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(DAOItem.CREATE_TABLE_ITEMS);
-		db.execSQL(DAOUser.CREATE_TABLE_USERS);
+		db.execSQL(ProjectConstants.CREATE_TABLE_ITEMS);
+		db.execSQL(ProjectConstants.CREATE_TABLE_USERS);
 	}
 
 	// upgrading database
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS " + DAOItem.TABLE_ITEMS);
-		db.execSQL("DROP TABLE IF EXISTS " + DAOUser.TABLE_USERS);
+		db.execSQL("DROP TABLE IF EXISTS " + ProjectConstants.TABLE_ITEMS);
+		db.execSQL("DROP TABLE IF EXISTS " + ProjectConstants.TABLE_USERS);
 
 		onCreate(db);
 	}

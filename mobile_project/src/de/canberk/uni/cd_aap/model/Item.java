@@ -1,6 +1,11 @@
 package de.canberk.uni.cd_aap.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import de.canberk.uni.cd_aap.util.ItemType;
 
@@ -24,10 +29,12 @@ public abstract class Item {
 	private String rating;
 
 	public Item() {
+		creationDate = new Date();
 	}
 
 	public Item(String user, String title, String type, String genre,
 			boolean favorite) {
+		creationDate = new Date();
 		setUser(user);
 		setTitle(title);
 		setType(ItemType.valueOf(type));
@@ -38,6 +45,7 @@ public abstract class Item {
 	public Item(int id, String user, String title, String type, String genre,
 			boolean favorite) {
 		setId(id);
+		creationDate = new Date();
 		setUser(user);
 		setTitle(title);
 		setType(ItemType.valueOf(type));
@@ -157,7 +165,7 @@ public abstract class Item {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	public String getRating() {
 		return rating;
 	}
@@ -171,6 +179,39 @@ public abstract class Item {
 			return 1;
 		}
 		return 0;
+	}
+
+	public int isDeletedAsInteger() {
+		if (isDeleted()) {
+			return 1;
+		}
+		return 0;
+	}
+
+	public int isInPossessionAsInteger() {
+		if (isInPossession()) {
+			return 1;
+		}
+		return 0;
+	}
+
+	public String getCreationDateAsString() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
+		dateFormat.setTimeZone(TimeZone.getTimeZone("CET"));
+		String timestampAsString = dateFormat.format(creationDate).toString();
+
+		return timestampAsString;
+	}
+
+	public void setCreationDateFromString(String timestamp) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+
+		try {
+			creationDate = dateFormat.parse(timestamp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
