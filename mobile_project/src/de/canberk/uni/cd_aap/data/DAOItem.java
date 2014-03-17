@@ -38,25 +38,27 @@ public class DAOItem {
 	public long addItem(Item item) {
 		ContentValues values = new ContentValues();
 		putValues(item, values);
+		values.put(ProjectConstants.CREATION_DATE,
+				item.getCreationDateAsString(item.getCreationDate()));
 
 		return sqliteDb.insert(ProjectConstants.TABLE_ITEMS, null, values);
 	}
-	
+
 	public Item getItem(int id) {
 		Item item = null;
-//		Cursor cursor = sqliteDb
-//		.query(ProjectConstants.TABLE_ITEMS,
-//				new String[] { ProjectConstants.ID,
-//						ProjectConstants.USER,
-//						ProjectConstants.TITLE,
-//						ProjectConstants.TYPE,
-//						ProjectConstants.GENRE,
-//						ProjectConstants.FAVORITE,
-//						ProjectConstants.IN_POSSESSION,
-//						ProjectConstants.DELETED },
-//				ProjectConstants.ID + "=?",
-//				new String[] { String.valueOf(id) }, null, null,
-//				null, null);
+		// Cursor cursor = sqliteDb
+		// .query(ProjectConstants.TABLE_ITEMS,
+		// new String[] { ProjectConstants.ID,
+		// ProjectConstants.USER,
+		// ProjectConstants.TITLE,
+		// ProjectConstants.TYPE,
+		// ProjectConstants.GENRE,
+		// ProjectConstants.FAVORITE,
+		// ProjectConstants.IN_POSSESSION,
+		// ProjectConstants.DELETED },
+		// ProjectConstants.ID + "=?",
+		// new String[] { String.valueOf(id) }, null, null,
+		// null, null);
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_ITEMS
 				+ " WHERE " + ProjectConstants.ID + "=" + '"' + id + '"';
 
@@ -66,6 +68,7 @@ public class DAOItem {
 			if (cursor != null) {
 				cursor.moveToFirst();
 				item = createItemFromTableValues(cursor);
+				
 			}
 
 		} catch (Exception e) {
@@ -124,7 +127,7 @@ public class DAOItem {
 
 		return count;
 	}
-	
+
 	// get items by specified type
 	public ArrayList<Item> getItemsByType(ItemType type, String user) {
 		ArrayList<Item> pre = getAllItems(user);
@@ -144,7 +147,8 @@ public class DAOItem {
 		Item item = null;
 
 		int iRow = cursor.getColumnIndex(ProjectConstants.ID);
-		int iCreationDate = cursor.getColumnIndex(ProjectConstants.CREATION_DATE);
+		int iCreationDate = cursor
+				.getColumnIndex(ProjectConstants.CREATION_DATE);
 		int iUser = cursor.getColumnIndex(ProjectConstants.USER);
 		int iTitle = cursor.getColumnIndex(ProjectConstants.TITLE);
 		int iType = cursor.getColumnIndex(ProjectConstants.TYPE);
@@ -196,10 +200,9 @@ public class DAOItem {
 		}
 		return false;
 	}
-	
+
 	public void putValues(Item item, ContentValues values) {
 		values.put(ProjectConstants.USER, item.getUser());
-		values.put(ProjectConstants.CREATION_DATE, item.getCreationDateAsString());
 		values.put(ProjectConstants.TITLE, item.getTitle());
 		values.put(ProjectConstants.TYPE, item.getType().toString());
 		values.put(ProjectConstants.GENRE, item.getGenre());
@@ -227,7 +230,7 @@ public class DAOItem {
 		values.put(ProjectConstants.EDITION, item.isDeletedAsInteger());
 		values.put(ProjectConstants.PUBLISHING_HOUSE, item.isDeletedAsInteger());
 		values.put(ProjectConstants.AUTHOR, item.isDeletedAsInteger());
-		values.put(ProjectConstants.ISBN, item.isDeletedAsInteger());		
+		values.put(ProjectConstants.ISBN, item.isDeletedAsInteger());
 	}
 
 }

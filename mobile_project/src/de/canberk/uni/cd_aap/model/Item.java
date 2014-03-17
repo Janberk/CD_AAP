@@ -195,8 +195,9 @@ public abstract class Item {
 		return 0;
 	}
 
-	public String getCreationDateAsString() {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
+	public String getCreationDateAsString(Date creationDate) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.GERMAN);
 		dateFormat.setTimeZone(TimeZone.getTimeZone("CET"));
 		String timestampAsString = dateFormat.format(creationDate).toString();
 
@@ -205,13 +206,16 @@ public abstract class Item {
 
 	public void setCreationDateFromString(String timestamp) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.getDefault());
+				Locale.GERMAN);
+		dateFormat.setTimeZone(TimeZone.getTimeZone("CET"));
+		Date newDate = new Date();
 
 		try {
-			creationDate = dateFormat.parse(timestamp);
+			newDate = dateFormat.parse(timestamp);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		this.creationDate = newDate;
 	}
 
 	@Override

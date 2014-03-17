@@ -18,6 +18,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.data.DAOItem;
@@ -47,6 +48,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 
 	private CheckBox cb_detailsFavorite;
 	private Spinner sp_detailsType;
+	private TextView tv_timestamp;
 
 	private ImageView iv_itemCover;
 
@@ -61,6 +63,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		cb_detailsFavorite = (CheckBox) theView
 				.findViewById(R.id.cb_detailsFavorite);
 		sp_detailsType = (Spinner) theView.findViewById(R.id.spinner_itemType);
+		tv_timestamp = (TextView) theView.findViewById(R.id.tv_timestamp);
 		iv_itemCover = (ImageView) theView.findViewById(R.id.iv_cover);
 		btn_detailsEdit = (Button) theView.findViewById(R.id.btn_detailsEdit);
 		btn_detailsSave = (Button) theView.findViewById(R.id.btn_detailsSave);
@@ -106,6 +109,8 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 
 		et_detailsTitle.setText(item.getTitle());
 		et_detailsGenre.setText(item.getGenre());
+		
+		tv_timestamp.setText(item.getCreationDateAsString(item.getCreationDate()));
 
 		cb_detailsFavorite.setChecked(item.isFavorite());
 

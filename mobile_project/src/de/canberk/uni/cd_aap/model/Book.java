@@ -59,7 +59,7 @@ public class Book extends Item {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("ID: " + getId() + "\n");
-		sb.append("Creation date: " + getCreationDateAsString() + "\n");
+		sb.append("Creation date: " + getCreationDateAsString(getCreationDate()) + "\n");
 		sb.append("Deletion date: " + getDeletionDate() + "\n");
 		sb.append("Created by: " + getUser() + "\n");
 		sb.append("Title: " + getTitle() + "\n");
