@@ -1,6 +1,11 @@
 package de.canberk.uni.cd_aap.fragments;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.data.DAOItem;
 import de.canberk.uni.cd_aap.model.Item;
@@ -35,6 +39,9 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public static final int ALBUM = 0;
 	public static final int BOOK = 1;
 	public static final int MOVIE = 2;
+
+	private static final int RESULT_LOAD_IMAGE = 7;
+	private static final int RESULT_OK = 8;
 
 	private Logger log = new Logger();
 
@@ -101,16 +108,17 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View theView = inflater.inflate(R.layout.fragment_item_details2,
-				container, false);
+		View theView = inflater.inflate(R.layout.fragment_item_details2, container,
+				false);
 		initElements(theView);
 
 		iv_itemCover.setImageResource(R.drawable.movie_cover);
 
 		et_detailsTitle.setText(item.getTitle());
 		et_detailsGenre.setText(item.getGenre());
-		
-		tv_timestamp.setText(item.getCreationDateAsString(item.getCreationDate()));
+
+		tv_timestamp.setText(item.getCreationDateAsString(item
+				.getCreationDate()));
 
 		cb_detailsFavorite.setChecked(item.isFavorite());
 
@@ -163,6 +171,14 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 			}
 		});
 
+		btn_detailsEdit.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				editDetails();
+			}
+		});
+
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this.getActivity(), R.array.item_types,
 				android.R.layout.simple_spinner_item);
@@ -200,14 +216,12 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	}
 
 	public void editDetails() {
-		btn_detailsEdit.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(getActivity(), item.getCreationDate().toString(), Toast.LENGTH_LONG).show();
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-			}
-		});
+		startActivityForResult(intent, RESULT_LOAD_IMAGE);
+
 	}
 
 	public void saveDetails() {
@@ -240,6 +254,27 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public void onResume() {
 		daoItem.open();
 		super.onResume();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK
+				&& null != data) {
+			Uri selectedImage = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+			Cursor cursor = getActivity().getContentResolver().query(
+					selectedImage, filePathColumn, null, null, null);
+			cursor.moveToFirst();
+
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			String picturePath = cursor.getString(columnIndex);
+			cursor.close();
+			iv_itemCover.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+		}
 	}
 
 }
