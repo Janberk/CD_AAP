@@ -1,7 +1,9 @@
 package de.canberk.uni.cd_aap.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,9 +42,6 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public static final int ALBUM = 0;
 	public static final int BOOK = 1;
 	public static final int MOVIE = 2;
-
-	private static final int RESULT_LOAD_IMAGE = 0;
-	private static final int RESULT_OK = 0;
 
 	private Logger log = new Logger();
 
@@ -72,6 +72,8 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		sp_detailsType = (Spinner) theView.findViewById(R.id.spinner_itemType);
 		tv_timestamp = (TextView) theView.findViewById(R.id.tv_timestamp);
 		iv_itemCover = (ImageView) theView.findViewById(R.id.iv_cover);
+		FrameLayout.LayoutParams parms = new FrameLayout.LayoutParams(320, 470);
+		iv_itemCover.setLayoutParams(parms);
 		btn_detailsEdit = (Button) theView.findViewById(R.id.btn_detailsEdit);
 		btn_detailsSave = (Button) theView.findViewById(R.id.btn_detailsSave);
 	}
@@ -108,8 +110,8 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View theView = inflater.inflate(R.layout.fragment_item_details2, container,
-				false);
+		View theView = inflater.inflate(R.layout.fragment_item_details2,
+				container, false);
 		initElements(theView);
 
 		iv_itemCover.setImageResource(R.drawable.movie_cover);
@@ -220,7 +222,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-		startActivityForResult(intent, RESULT_LOAD_IMAGE);
+		startActivityForResult(intent, ItemListFragment.REQUEST_CODE);
 
 	}
 
@@ -260,8 +262,11 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK
-				&& null != data) {
+		if (resultCode != Activity.RESULT_OK || data == null) {
+			return;
+		}
+
+		if (requestCode == ItemListFragment.REQUEST_CODE) {
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
@@ -272,7 +277,11 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 			String picturePath = cursor.getString(columnIndex);
 			cursor.close();
-			iv_itemCover.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+			Bitmap bitmap = Bitmap
+					.createBitmap(48, 72, Bitmap.Config.ARGB_8888);
+			bitmap = BitmapFactory.decodeFile(picturePath);
+			iv_itemCover.setImageBitmap(bitmap);
 
 		}
 	}
