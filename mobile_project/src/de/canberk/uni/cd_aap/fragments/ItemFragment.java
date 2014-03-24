@@ -40,8 +40,8 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public static final int BOOK = 1;
 	public static final int MOVIE = 2;
 
-	private static final int RESULT_LOAD_IMAGE = 7;
-	private static final int RESULT_OK = 8;
+	private static final int RESULT_LOAD_IMAGE = 0;
+	private static final int RESULT_OK = 0;
 
 	private Logger log = new Logger();
 
