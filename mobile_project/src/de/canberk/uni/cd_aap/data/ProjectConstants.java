@@ -12,6 +12,7 @@ public class ProjectConstants {
 	public static final String TITLE = "title";
 	public static final String USER = "created_by";
 	public static final String TYPE = "type";
+	public static final String COVER = "cover";
 	public static final String GENRE = "genre";
 	public static final String FAVORITE = "favorite";
 	public static final String CREATION_DATE = "creation_date"; // also for user
@@ -56,6 +57,7 @@ public class ProjectConstants {
 			+ USER + " TEXT, "
 			+ TITLE + " TEXT, "
 			+ TYPE + " TEXT, "
+			+ COVER + " BLOB, "
 			+ GENRE + " TEXT, "
 			+ FAVORITE + " INTEGER, "			
 			+ CREATION_DATE + " TEXT, "

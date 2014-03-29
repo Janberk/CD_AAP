@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import de.canberk.uni.cd_aap.R;
+import de.canberk.uni.cd_aap.util.AppContextUtil;
 
 public abstract class FragmentActivityBuilder extends FragmentActivity {
 
@@ -13,6 +14,7 @@ public abstract class FragmentActivityBuilder extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		AppContextUtil.setContext(getApplicationContext());
 
 		setContentView(R.layout.activity_z_app);
 

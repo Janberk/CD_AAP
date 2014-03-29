@@ -7,10 +7,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
 import de.canberk.uni.cd_aap.model.Book;
 import de.canberk.uni.cd_aap.model.Item;
 import de.canberk.uni.cd_aap.model.Movie;
 import de.canberk.uni.cd_aap.model.MusicAlbum;
+import de.canberk.uni.cd_aap.util.ConvertCoverUtil;
 import de.canberk.uni.cd_aap.util.ItemType;
 
 public class DAOItem {
@@ -46,19 +48,6 @@ public class DAOItem {
 
 	public Item getItem(int id) {
 		Item item = null;
-		// Cursor cursor = sqliteDb
-		// .query(ProjectConstants.TABLE_ITEMS,
-		// new String[] { ProjectConstants.ID,
-		// ProjectConstants.USER,
-		// ProjectConstants.TITLE,
-		// ProjectConstants.TYPE,
-		// ProjectConstants.GENRE,
-		// ProjectConstants.FAVORITE,
-		// ProjectConstants.IN_POSSESSION,
-		// ProjectConstants.DELETED },
-		// ProjectConstants.ID + "=?",
-		// new String[] { String.valueOf(id) }, null, null,
-		// null, null);
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_ITEMS
 				+ " WHERE " + ProjectConstants.ID + "=" + '"' + id + '"';
 
@@ -68,7 +57,7 @@ public class DAOItem {
 			if (cursor != null) {
 				cursor.moveToFirst();
 				item = createItemFromTableValues(cursor);
-				
+
 			}
 
 		} catch (Exception e) {
@@ -147,6 +136,7 @@ public class DAOItem {
 		Item item = null;
 
 		int iRow = cursor.getColumnIndex(ProjectConstants.ID);
+		int iCover = cursor.getColumnIndex(ProjectConstants.COVER);
 		int iCreationDate = cursor
 				.getColumnIndex(ProjectConstants.CREATION_DATE);
 		int iUser = cursor.getColumnIndex(ProjectConstants.USER);
@@ -166,6 +156,8 @@ public class DAOItem {
 		int deletedAsInt = (Integer.parseInt(cursor.getString(iDeleted)));
 
 		int id = Integer.parseInt(cursor.getString(iRow));
+		byte[] bytes = cursor.getBlob(iCover);
+		Bitmap cover = ConvertCoverUtil.getBitmap(bytes);
 		String creationDate = cursor.getString(iCreationDate);
 		String user = cursor.getString(iUser);
 		String title = cursor.getString(iTitle);
@@ -188,6 +180,7 @@ public class DAOItem {
 		default:
 			break;
 		}
+		item.setCover(cover);
 		item.setCreationDateFromString(creationDate);
 		item.setInPossession(isTrue(inPossessionAsInt));
 		item.setDeleted(isTrue(deletedAsInt));
@@ -202,6 +195,8 @@ public class DAOItem {
 	}
 
 	public void putValues(Item item, ContentValues values) {
+		byte[] bytes = ConvertCoverUtil.getByteArray(item.getCover());
+		values.put(ProjectConstants.COVER, bytes);
 		values.put(ProjectConstants.USER, item.getUser());
 		values.put(ProjectConstants.TITLE, item.getTitle());
 		values.put(ProjectConstants.TYPE, item.getType().toString());

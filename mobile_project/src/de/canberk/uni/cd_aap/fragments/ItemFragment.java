@@ -114,7 +114,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 				container, false);
 		initElements(theView);
 
-		iv_itemCover.setImageResource(R.drawable.movie_cover);
+		iv_itemCover.setImageBitmap(item.getCover());
 
 		et_detailsTitle.setText(item.getTitle());
 		et_detailsGenre.setText(item.getGenre());
@@ -282,6 +282,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 					.createBitmap(48, 72, Bitmap.Config.ARGB_8888);
 			bitmap = BitmapFactory.decodeFile(picturePath);
 			iv_itemCover.setImageBitmap(bitmap);
+			item.setCover(bitmap);
 
 		}
 	}
