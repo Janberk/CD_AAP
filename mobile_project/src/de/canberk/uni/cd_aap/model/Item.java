@@ -8,15 +8,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import de.canberk.uni.cd_aap.R;
-import de.canberk.uni.cd_aap.util.AppContextUtil;
+import de.canberk.uni.cd_aap.util.CoverUtil;
 import de.canberk.uni.cd_aap.util.ItemType;
 
 public abstract class Item {
 
 	private int id;
-	private Bitmap cover = createDefaultCover();
+	private Bitmap cover = CoverUtil.createDefaultCover();
 	private Date creationDate;
 	private String user;
 	private boolean deleted;
@@ -232,20 +230,6 @@ public abstract class Item {
 			e.printStackTrace();
 		}
 		this.creationDate = newDate;
-	}
-
-	private Bitmap createDefaultCover() {
-		Bitmap bitmap = null;
-		
-		try {
-			bitmap = Bitmap.createBitmap(48, 72, Bitmap.Config.ARGB_8888);
-			bitmap = BitmapFactory.decodeResource(AppContextUtil.getContext()
-					.getResources(), R.drawable.cover_placeholder);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-
-		return bitmap;
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import de.canberk.uni.cd_aap.model.Book;
 import de.canberk.uni.cd_aap.model.Item;
 import de.canberk.uni.cd_aap.model.Movie;
 import de.canberk.uni.cd_aap.model.MusicAlbum;
-import de.canberk.uni.cd_aap.util.ConvertCoverUtil;
+import de.canberk.uni.cd_aap.util.CoverUtil;
 import de.canberk.uni.cd_aap.util.ItemType;
 
 public class DAOItem {
@@ -157,7 +157,7 @@ public class DAOItem {
 
 		int id = Integer.parseInt(cursor.getString(iRow));
 		byte[] bytes = cursor.getBlob(iCover);
-		Bitmap cover = ConvertCoverUtil.getBitmap(bytes);
+		Bitmap cover = CoverUtil.getBitmap(bytes);
 		String creationDate = cursor.getString(iCreationDate);
 		String user = cursor.getString(iUser);
 		String title = cursor.getString(iTitle);
@@ -195,7 +195,7 @@ public class DAOItem {
 	}
 
 	public void putValues(Item item, ContentValues values) {
-		byte[] bytes = ConvertCoverUtil.getByteArray(item.getCover());
+		byte[] bytes = CoverUtil.getByteArray(item.getCover());
 		values.put(ProjectConstants.COVER, bytes);
 		values.put(ProjectConstants.USER, item.getUser());
 		values.put(ProjectConstants.TITLE, item.getTitle());
