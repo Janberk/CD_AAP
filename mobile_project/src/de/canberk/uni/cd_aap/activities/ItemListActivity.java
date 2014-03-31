@@ -1,6 +1,7 @@
 package de.canberk.uni.cd_aap.activities;
 
 import android.support.v4.app.Fragment;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.fragments.ItemListFragment;
 
 public class ItemListActivity extends FragmentActivityBuilder {
@@ -10,7 +11,7 @@ public class ItemListActivity extends FragmentActivityBuilder {
 	protected Fragment createFragment() {
 
 		String listTag = (String) getIntent().getSerializableExtra(
-				ItemListFragment.LIST_TAG);
+				ProjectConstants.KEY_LIST_TAG);
 
 		if (listTag == null) {
 			return new ItemListFragment();

@@ -28,11 +28,11 @@ import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.activities.ItemListActivity;
 import de.canberk.uni.cd_aap.activities.SignupActivity;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.util.HTTPRequestHandler;
 
 public class LoginFragment extends Fragment {
 
-	public static final String MY_PREFERENCES = "MyPrefs";
 	public static final String EMAIL = "emailKey";
 	public static final String PASSWORD = "passwordKey";
 
@@ -221,8 +221,8 @@ public class LoginFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		sharedPreferences = getActivity().getSharedPreferences(MY_PREFERENCES,
-				Context.MODE_PRIVATE);
+		sharedPreferences = getActivity().getSharedPreferences(
+				ProjectConstants.KEY_MY_PREFERENCES, Context.MODE_PRIVATE);
 		if (sharedPreferences.contains(EMAIL)) {
 			if (sharedPreferences.contains(PASSWORD)) {
 				Intent intent = new Intent(getActivity(),

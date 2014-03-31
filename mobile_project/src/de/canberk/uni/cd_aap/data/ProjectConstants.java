@@ -1,6 +1,28 @@
 package de.canberk.uni.cd_aap.data;
 
+import de.canberk.uni.cd_aap.util.ItemType;
+
 public class ProjectConstants {
+	
+	// result/request codes
+	public static final int REQUEST_CODE = 0;
+	
+	// spinner indices
+	public static final int ALBUM = 0;
+	public static final int BOOK = 1;
+	public static final int MOVIE = 2;
+	
+	// intent extra keys/tags
+	public static final String KEY_MY_PREFERENCES = "de.canberk.uniproject.my_prefs";
+	public static final String KEY_ITEM_ID = "de.canberk.uniproject.id";
+	public static final String KEY_TYPE = "de.canberk.uniproject.type";
+	public static final String KEY_CREATE_NEW_ITEM = "de.canberk.uniproject.create_new_item";
+	public static final String KEY_USER_TAG = "de.canberk.uniproject.user_tag";
+	public static final String KEY_LIST_TAG = "de.canberk.uniproject.list_tag";
+	public static final String TAG_ALL = ItemType.All.name();
+	public static final String TAG_ALBUM = ItemType.Album.name();
+	public static final String TAG_BOOK = ItemType.Book.name();
+	public static final String TAG_MOVIE = ItemType.Movie.name();
 
 	// table names
 	public static final String TABLE_USERS = "users";
@@ -74,13 +96,13 @@ public class ProjectConstants {
 			+ SCRIPT + " TEXT, "
 			+ ACTORS + " TEXT, "
 			+ MUSIC + " TEXT, "
-			+ LENGTH + " INTEGER, "
+			+ LENGTH + " TEXT, "
 			+ LABEL + " TEXT, "
 			+ STUDIO + " TEXT, "
 			+ ARTIST + " TEXT, "
 			+ FORMAT + " TEXT, "
-			+ TITLE_COUNT + " INTEGER, "
-			+ EDITION + " INTEGER, "
+			+ TITLE_COUNT + " TEXT, "
+			+ EDITION + " TEXT, "
 			+ PUBLISHING_HOUSE + " TEXT, "
 			+ AUTHOR + " TEXT, "
 			+ ISBN + " TEXT"

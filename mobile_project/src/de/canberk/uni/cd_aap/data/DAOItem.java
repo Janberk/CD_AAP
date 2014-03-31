@@ -207,8 +207,12 @@ public class DAOItem {
 		values.put(ProjectConstants.FAVORITE,
 				item.isTrueAsInt(item.isFavorite()));
 		values.put(ProjectConstants.DELETED, item.isTrueAsInt(item.isDeleted()));
-		values.put(ProjectConstants.DELETION_DATE,
-				DateUtil.dateToFormattedStringConverter(item.getDeletionDate()));
+		
+		if (item.getDeletionDate() != null) {
+			values.put(ProjectConstants.DELETION_DATE,
+					DateUtil.dateToFormattedStringConverter(item.getDeletionDate()));
+		}
+		
 		values.put(ProjectConstants.ORIGINAL_TITLE,
 				item.isTrueAsInt(item.isDeleted()));
 		values.put(ProjectConstants.COUNTRY, item.getCountry());

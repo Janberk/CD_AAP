@@ -13,11 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import de.canberk.uni.cd_aap.R;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 
 public class DialogSetItemTypeFragment extends DialogFragment implements
 		OnItemSelectedListener {
-
-	public static final String TYPE = "de.canberk.z_app.TYPE";
 
 	private AlertDialog alert;
 
@@ -86,7 +85,7 @@ public class DialogSetItemTypeFragment extends DialogFragment implements
 			return;
 
 		Intent theIntent = new Intent();
-		theIntent.putExtra(TYPE, typeAsString);
+		theIntent.putExtra(ProjectConstants.KEY_TYPE, typeAsString);
 
 		getTargetFragment().onActivityResult(getTargetRequestCode(),
 				resultCode, theIntent);

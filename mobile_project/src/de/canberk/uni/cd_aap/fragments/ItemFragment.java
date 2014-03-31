@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.data.DAOItem;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.model.Item;
 import de.canberk.uni.cd_aap.util.AllItems;
 import de.canberk.uni.cd_aap.util.DateUtil;
@@ -36,13 +37,6 @@ import de.canberk.uni.cd_aap.util.ItemType;
 import de.canberk.uni.cd_aap.util.Logger;
 
 public class ItemFragment extends Fragment implements OnItemSelectedListener {
-
-	public static final String ITEM_ID = "de.canberk.uni.cd_aap.ID";
-	public static final String USER_TAG = "de.canberk.uni.cd_aap.user_tag";
-
-	public static final int ALBUM = 0;
-	public static final int BOOK = 1;
-	public static final int MOVIE = 2;
 
 	private Logger log = new Logger();
 
@@ -82,8 +76,8 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public static ItemFragment newItemFragment(int id, String userTag) {
 
 		Bundle passedData = new Bundle();
-		passedData.putSerializable(ITEM_ID, id);
-		passedData.putSerializable(USER_TAG, userTag);
+		passedData.putSerializable(ProjectConstants.KEY_ITEM_ID, id);
+		passedData.putSerializable(ProjectConstants.KEY_USER_TAG, userTag);
 
 		ItemFragment itemFragment = new ItemFragment();
 		itemFragment.setArguments(passedData);
@@ -96,8 +90,10 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		int id = (Integer) getArguments().getSerializable(ITEM_ID);
-		String user = (String) getArguments().getSerializable(USER_TAG);
+		int id = (Integer) getArguments().getSerializable(
+				ProjectConstants.KEY_ITEM_ID);
+		String user = (String) getArguments().getSerializable(
+				ProjectConstants.KEY_USER_TAG);
 
 		AllItems allItems = AllItems.get(getActivity(), user);
 
@@ -201,13 +197,13 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 
 		switch (type) {
 		case Album:
-			selectionIndex = ALBUM;
+			selectionIndex = ProjectConstants.ALBUM;
 			break;
 		case Book:
-			selectionIndex = BOOK;
+			selectionIndex = ProjectConstants.BOOK;
 			break;
 		case Movie:
-			selectionIndex = MOVIE;
+			selectionIndex = ProjectConstants.MOVIE;
 			break;
 
 		default:
@@ -223,7 +219,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-		startActivityForResult(intent, ItemListFragment.REQUEST_CODE);
+		startActivityForResult(intent, ProjectConstants.REQUEST_CODE);
 
 	}
 
@@ -267,7 +263,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 			return;
 		}
 
-		if (requestCode == ItemListFragment.REQUEST_CODE) {
+		if (requestCode == ProjectConstants.REQUEST_CODE) {
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 

@@ -1,6 +1,7 @@
 package de.canberk.uni.cd_aap.activities;
 
 import android.support.v4.app.Fragment;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.fragments.ItemFragment;
 
 public class Z_App extends FragmentActivityBuilder {
@@ -10,9 +11,9 @@ public class Z_App extends FragmentActivityBuilder {
 	protected Fragment createFragment() {
 
 		int itemId = (Integer) getIntent().getSerializableExtra(
-				ItemFragment.ITEM_ID);
+				ProjectConstants.KEY_ITEM_ID);
 		String userTag = (String) getIntent().getSerializableExtra(
-				ItemFragment.USER_TAG);
+				ProjectConstants.KEY_USER_TAG);
 
 		return new ItemFragment().newItemFragment(itemId, userTag);
 

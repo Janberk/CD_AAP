@@ -12,15 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.activities.ItemListActivity;
-import de.canberk.uni.cd_aap.util.ItemType;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.util.SelectItemAdapter;
 
 public class SelectListFragment extends Fragment {
-
-	public static final String TAG_ALL = ItemType.All.name();
-	public static final String TAG_ALBUM = ItemType.Album.name();
-	public static final String TAG_BOOK = ItemType.Book.name();
-	public static final String TAG_MOVIE = ItemType.Movie.name();
 
 	private ListView selectList;
 	private ArrayList<String> lists;
@@ -33,10 +28,10 @@ public class SelectListFragment extends Fragment {
 
 		selectList = (ListView) view.findViewById(R.id.selectList);
 		lists = new ArrayList<String>();
-		lists.add(TAG_ALL);
-		lists.add(TAG_ALBUM);
-		lists.add(TAG_BOOK);
-		lists.add(TAG_MOVIE);
+		lists.add(ProjectConstants.TAG_ALL);
+		lists.add(ProjectConstants.TAG_ALBUM);
+		lists.add(ProjectConstants.TAG_BOOK);
+		lists.add(ProjectConstants.TAG_MOVIE);
 
 		adapter = new SelectItemAdapter(getActivity(), lists);
 		selectList.setAdapter(adapter);
@@ -53,7 +48,7 @@ public class SelectListFragment extends Fragment {
 
 						Intent newIntent = new Intent(getActivity(),
 								ItemListActivity.class);
-						newIntent.putExtra(ItemListFragment.LIST_TAG,
+						newIntent.putExtra(ProjectConstants.KEY_LIST_TAG,
 								clickedString);
 
 						startActivityForResult(newIntent, 0);

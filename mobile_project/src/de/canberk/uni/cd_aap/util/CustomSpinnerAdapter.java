@@ -2,13 +2,10 @@ package de.canberk.uni.cd_aap.util;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.model.Item;
 
 public class CustomSpinnerAdapter extends ArrayAdapter<CharSequence> {
-
-	public static final int ALBUM = 0;
-	public static final int BOOK = 1;
-	public static final int MOVIE = 2;
 
 	public CustomSpinnerAdapter(Context context, int resource,
 			int simpleSpinnerItem) {
@@ -22,13 +19,13 @@ public class CustomSpinnerAdapter extends ArrayAdapter<CharSequence> {
 
 		switch (type) {
 		case Album:
-			selectionIndex = ALBUM;
+			selectionIndex = ProjectConstants.ALBUM;
 			break;
 		case Book:
-			selectionIndex = BOOK;
+			selectionIndex = ProjectConstants.BOOK;
 			break;
 		case Movie:
-			selectionIndex = MOVIE;
+			selectionIndex = ProjectConstants.MOVIE;
 			break;
 
 		default:

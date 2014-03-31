@@ -26,6 +26,7 @@ import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.activities.LoginActivity;
 import de.canberk.uni.cd_aap.activities.Z_App;
 import de.canberk.uni.cd_aap.data.DAOItem;
+import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.model.Book;
 import de.canberk.uni.cd_aap.model.Item;
 import de.canberk.uni.cd_aap.model.Movie;
@@ -36,12 +37,6 @@ import de.canberk.uni.cd_aap.util.ItemType;
 import de.canberk.uni.cd_aap.util.Logger;
 
 public class ItemListFragment extends Fragment {
-
-	public static final String LIST_TAG = "de.canberk.uni.cd_aap.list_tag";
-
-	private static final String CREATE_NEW_ITEM = "create_new_item";
-
-	public static final int REQUEST_CODE = 0;
 
 	private SelectListFragment selectList = new SelectListFragment();;
 	private Logger log = new Logger();
@@ -56,7 +51,7 @@ public class ItemListFragment extends Fragment {
 
 	private String titleOfNewItem = null;
 	private int idOfNewItem = 0;
-	
+
 	private String createdBy;
 
 	private String tag = null;
@@ -64,8 +59,7 @@ public class ItemListFragment extends Fragment {
 	public static ItemListFragment newItemListFragment(String listTag) {
 
 		Bundle passedData = new Bundle();
-		passedData.putSerializable(LIST_TAG, listTag);
-		
+		passedData.putSerializable(ProjectConstants.KEY_LIST_TAG, listTag);
 
 		ItemListFragment itemListFragment = new ItemListFragment();
 		itemListFragment.setArguments(passedData);
@@ -77,7 +71,7 @@ public class ItemListFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		createdBy = getUser();
 
 		setHasOptionsMenu(true);
@@ -85,9 +79,9 @@ public class ItemListFragment extends Fragment {
 		Bundle bundle = getArguments();
 
 		if (bundle == null) {
-			tag = SelectListFragment.TAG_ALL;
+			tag = ProjectConstants.TAG_ALL;
 		} else {
-			tag = (String) bundle.get(LIST_TAG);
+			tag = (String) bundle.get(ProjectConstants.KEY_LIST_TAG);
 		}
 		AllItems allItems = AllItems.get(getActivity(), createdBy);
 		daoItem = allItems.getDaoItem();
@@ -101,13 +95,13 @@ public class ItemListFragment extends Fragment {
 
 		listView = (ListView) view.findViewById(R.id.itemList);
 
-		if (tag.equals(SelectListFragment.TAG_ALL)) {
+		if (tag.equals(ProjectConstants.TAG_ALL)) {
 			itemList = daoItem.getAllItems(createdBy);
-		} else if (tag.equals(SelectListFragment.TAG_ALBUM)) {
+		} else if (tag.equals(ProjectConstants.TAG_ALBUM)) {
 			itemList = daoItem.getItemsByType(ItemType.Album, createdBy);
-		} else if (tag.equals(SelectListFragment.TAG_BOOK)) {
+		} else if (tag.equals(ProjectConstants.TAG_BOOK)) {
 			itemList = daoItem.getItemsByType(ItemType.Book, createdBy);
-		} else if (tag.equals(SelectListFragment.TAG_MOVIE)) {
+		} else if (tag.equals(ProjectConstants.TAG_MOVIE)) {
 			itemList = daoItem.getItemsByType(ItemType.Movie, createdBy);
 		}
 
@@ -127,7 +121,8 @@ public class ItemListFragment extends Fragment {
 				Item clickedItem = (Item) listView.getAdapter().getItem(
 						position);
 				Intent newIntent = new Intent(getActivity(), Z_App.class);
-				newIntent.putExtra(ItemFragment.ITEM_ID, clickedItem.getId());
+				newIntent.putExtra(ProjectConstants.KEY_ITEM_ID,
+						clickedItem.getId());
 
 				startActivityForResult(newIntent, 0);
 			}
@@ -151,9 +146,10 @@ public class ItemListFragment extends Fragment {
 						.newInstance();
 
 				typeDialog.setTargetFragment(ItemListFragment.this,
-						REQUEST_CODE);
+						ProjectConstants.REQUEST_CODE);
 
-				typeDialog.show(fragManager, CREATE_NEW_ITEM);
+				typeDialog.show(fragManager,
+						ProjectConstants.KEY_CREATE_NEW_ITEM);
 
 				et_newItemTitle.setText("");
 			}
@@ -168,7 +164,7 @@ public class ItemListFragment extends Fragment {
 		if (resultCode != Activity.RESULT_OK) {
 			return;
 		}
-		if (requestCode == REQUEST_CODE) {
+		if (requestCode == ProjectConstants.REQUEST_CODE) {
 
 			Item item = createItem(data);
 
@@ -182,13 +178,14 @@ public class ItemListFragment extends Fragment {
 
 	public Item createItem(Intent data) {
 		String typeAsString = (String) data
-				.getSerializableExtra(DialogSetItemTypeFragment.TYPE);
+				.getSerializableExtra(ProjectConstants.KEY_TYPE);
 		ItemType type = ItemType.valueOf(typeAsString);
 		Item item = null;
 
 		switch (type) {
 		case Album:
-			item = new MusicAlbum(createdBy, titleOfNewItem, typeAsString, "", false);
+			item = new MusicAlbum(createdBy, titleOfNewItem, typeAsString, "",
+					false);
 			item.setId(idOfNewItem);
 			break;
 		case Book:
@@ -208,7 +205,7 @@ public class ItemListFragment extends Fragment {
 
 	public String getUser() {
 		SharedPreferences sharedPreferences = getActivity()
-				.getSharedPreferences(LoginFragment.MY_PREFERENCES,
+				.getSharedPreferences(ProjectConstants.KEY_MY_PREFERENCES,
 						Context.MODE_PRIVATE);
 		String user = sharedPreferences.getString(LoginFragment.EMAIL, "");
 		return user;
@@ -216,7 +213,7 @@ public class ItemListFragment extends Fragment {
 
 	public void logout() {
 		SharedPreferences sharedPreferences = getActivity()
-				.getSharedPreferences(LoginFragment.MY_PREFERENCES,
+				.getSharedPreferences(ProjectConstants.KEY_MY_PREFERENCES,
 						Context.MODE_PRIVATE);
 		Editor editor = sharedPreferences.edit();
 		editor.clear();
@@ -238,13 +235,13 @@ public class ItemListFragment extends Fragment {
 	public void onResume() {
 		daoItem.open();
 		itemList.clear();
-		if (tag.equals(SelectListFragment.TAG_ALL)) {
+		if (tag.equals(ProjectConstants.TAG_ALL)) {
 			itemList.addAll(daoItem.getAllItems(createdBy));
-		} else if (tag.equals(SelectListFragment.TAG_ALBUM)) {
+		} else if (tag.equals(ProjectConstants.TAG_ALBUM)) {
 			itemList.addAll(daoItem.getItemsByType(ItemType.Album, createdBy));
-		} else if (tag.equals(SelectListFragment.TAG_BOOK)) {
+		} else if (tag.equals(ProjectConstants.TAG_BOOK)) {
 			itemList.addAll(daoItem.getItemsByType(ItemType.Book, createdBy));
-		} else if (tag.equals(SelectListFragment.TAG_MOVIE)) {
+		} else if (tag.equals(ProjectConstants.TAG_MOVIE)) {
 			itemList.addAll(daoItem.getItemsByType(ItemType.Movie, createdBy));
 		}
 		adapter.refresh(itemList);

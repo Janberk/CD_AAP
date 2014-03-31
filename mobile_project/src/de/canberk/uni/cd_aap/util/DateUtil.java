@@ -8,13 +8,20 @@ import java.util.TimeZone;
 
 public class DateUtil {
 
-	public static String dateToFormattedStringConverter(Date creationDate) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.GERMAN);
-		dateFormat.setTimeZone(TimeZone.getTimeZone("CET"));
-		String timestampAsString = dateFormat.format(creationDate).toString();
-
-		return timestampAsString;
+	public static String dateToFormattedStringConverter(Date date) {
+		String timestampAsString = null;
+		
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.GERMAN);
+			dateFormat.setTimeZone(TimeZone.getTimeZone("CET"));
+			timestampAsString = dateFormat.format(date).toString();			
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}		
+		return timestampAsString;		
 	}
 
 }
