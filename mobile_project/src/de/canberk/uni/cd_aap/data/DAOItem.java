@@ -13,6 +13,7 @@ import de.canberk.uni.cd_aap.model.Item;
 import de.canberk.uni.cd_aap.model.Movie;
 import de.canberk.uni.cd_aap.model.MusicAlbum;
 import de.canberk.uni.cd_aap.util.CoverUtil;
+import de.canberk.uni.cd_aap.util.DateUtil;
 import de.canberk.uni.cd_aap.util.ItemType;
 
 public class DAOItem {
@@ -41,7 +42,7 @@ public class DAOItem {
 		ContentValues values = new ContentValues();
 		putValues(item, values);
 		values.put(ProjectConstants.CREATION_DATE,
-				item.getCreationDateAsString(item.getCreationDate()));
+				DateUtil.dateToFormattedStringConverter(item.getCreationDate()));
 
 		return sqliteDb.insert(ProjectConstants.TABLE_ITEMS, null, values);
 	}
@@ -202,30 +203,45 @@ public class DAOItem {
 		values.put(ProjectConstants.TYPE, item.getType().toString());
 		values.put(ProjectConstants.GENRE, item.getGenre());
 		values.put(ProjectConstants.IN_POSSESSION,
-				item.isInPossessionAsInteger());
-		values.put(ProjectConstants.FAVORITE, item.isFavoriteAsInteger());
-		values.put(ProjectConstants.DELETED, item.isDeletedAsInteger());
-		values.put(ProjectConstants.DELETION_DATE, item.isDeletedAsInteger());
-		values.put(ProjectConstants.ORIGINAL_TITLE, item.isDeletedAsInteger());
-		values.put(ProjectConstants.COUNTRY, item.isDeletedAsInteger());
-		values.put(ProjectConstants.YEAR_PUBLISHED, item.isDeletedAsInteger());
-		values.put(ProjectConstants.CONTENT, item.isDeletedAsInteger());
-		values.put(ProjectConstants.RATING, item.isDeletedAsInteger());
-		values.put(ProjectConstants.PRODUCER, item.isDeletedAsInteger());
-		values.put(ProjectConstants.DIRECTOR, item.isDeletedAsInteger());
-		values.put(ProjectConstants.SCRIPT, item.isDeletedAsInteger());
-		values.put(ProjectConstants.ACTORS, item.isDeletedAsInteger());
-		values.put(ProjectConstants.MUSIC, item.isDeletedAsInteger());
-		values.put(ProjectConstants.LENGTH, item.isDeletedAsInteger());
-		values.put(ProjectConstants.LABEL, item.isDeletedAsInteger());
-		values.put(ProjectConstants.STUDIO, item.isDeletedAsInteger());
-		values.put(ProjectConstants.ARTIST, item.isDeletedAsInteger());
-		values.put(ProjectConstants.FORMAT, item.isDeletedAsInteger());
-		values.put(ProjectConstants.TITLE_COUNT, item.isDeletedAsInteger());
-		values.put(ProjectConstants.EDITION, item.isDeletedAsInteger());
-		values.put(ProjectConstants.PUBLISHING_HOUSE, item.isDeletedAsInteger());
-		values.put(ProjectConstants.AUTHOR, item.isDeletedAsInteger());
-		values.put(ProjectConstants.ISBN, item.isDeletedAsInteger());
+				item.isTrueAsInt(item.isInPossession()));
+		values.put(ProjectConstants.FAVORITE,
+				item.isTrueAsInt(item.isFavorite()));
+		values.put(ProjectConstants.DELETED, item.isTrueAsInt(item.isDeleted()));
+		values.put(ProjectConstants.DELETION_DATE,
+				DateUtil.dateToFormattedStringConverter(item.getDeletionDate()));
+		values.put(ProjectConstants.ORIGINAL_TITLE,
+				item.isTrueAsInt(item.isDeleted()));
+		values.put(ProjectConstants.COUNTRY, item.getCountry());
+		values.put(ProjectConstants.YEAR_PUBLISHED, item.getYearPublished());
+		values.put(ProjectConstants.CONTENT, item.getContent());
+		values.put(ProjectConstants.RATING, item.getRating());
+
+		if (item instanceof Movie) {
+			values.put(ProjectConstants.PRODUCER, ((Movie) item).getProducer());
+			values.put(ProjectConstants.DIRECTOR, ((Movie) item).getDirector());
+			values.put(ProjectConstants.SCRIPT, ((Movie) item).getScript());
+			values.put(ProjectConstants.ACTORS, ((Movie) item).getActors());
+			values.put(ProjectConstants.MUSIC, ((Movie) item).getMusic());
+			values.put(ProjectConstants.LENGTH, ((Movie) item).getLength());
+		}
+
+		if (item instanceof MusicAlbum) {
+			values.put(ProjectConstants.LABEL, ((MusicAlbum) item).getLabel());
+			values.put(ProjectConstants.STUDIO, ((MusicAlbum) item).getStudio());
+			values.put(ProjectConstants.ARTIST, ((MusicAlbum) item).getArtist());
+			values.put(ProjectConstants.FORMAT, ((MusicAlbum) item).getFormat());
+			values.put(ProjectConstants.TITLE_COUNT,
+					((MusicAlbum) item).getTitleCount());
+		}
+
+		if (item instanceof Book) {
+			values.put(ProjectConstants.EDITION, ((Book) item).getEdition());
+			values.put(ProjectConstants.PUBLISHING_HOUSE,
+					((Book) item).getPublishingHouse());
+			values.put(ProjectConstants.AUTHOR, ((Book) item).getAuthor());
+			values.put(ProjectConstants.ISBN, ((Book) item).getIsbn());
+		}
+
 	}
 
 }

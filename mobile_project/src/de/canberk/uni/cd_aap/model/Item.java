@@ -27,7 +27,7 @@ public abstract class Item {
 	private String country;
 	private ItemType type;
 	private String genre;
-	private Date yearPublished;
+	private String yearPublished;
 	private String content;
 	private String rating;
 
@@ -164,11 +164,11 @@ public abstract class Item {
 		this.genre = genre;
 	}
 
-	public Date getYearPublished() {
+	public String getYearPublished() {
 		return yearPublished;
 	}
 
-	public void setYearPublished(Date yearPublished) {
+	public void setYearPublished(String yearPublished) {
 		this.yearPublished = yearPublished;
 	}
 
@@ -188,34 +188,11 @@ public abstract class Item {
 		this.rating = rating;
 	}
 
-	public int isFavoriteAsInteger() {
-		if (isFavorite()) {
+	public int isTrueAsInt(boolean isTrue) {
+		if (isTrue) {
 			return 1;
 		}
 		return 0;
-	}
-
-	public int isDeletedAsInteger() {
-		if (isDeleted()) {
-			return 1;
-		}
-		return 0;
-	}
-
-	public int isInPossessionAsInteger() {
-		if (isInPossession()) {
-			return 1;
-		}
-		return 0;
-	}
-
-	public String getCreationDateAsString(Date creationDate) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.GERMAN);
-		dateFormat.setTimeZone(TimeZone.getTimeZone("CET"));
-		String timestampAsString = dateFormat.format(creationDate).toString();
-
-		return timestampAsString;
 	}
 
 	public void setCreationDateFromString(String timestamp) {

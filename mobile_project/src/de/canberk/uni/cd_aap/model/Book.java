@@ -1,8 +1,10 @@
 package de.canberk.uni.cd_aap.model;
 
+import de.canberk.uni.cd_aap.util.DateUtil;
+
 public class Book extends Item {
 
-	private int edition;
+	private String edition;
 	private String publishingHouse;
 	private String author;
 	private String isbn;
@@ -22,11 +24,11 @@ public class Book extends Item {
 	}
 
 	// getters and setters
-	public int getEdition() {
+	public String getEdition() {
 		return edition;
 	}
 
-	public void setEdition(int edition) {
+	public void setEdition(String edition) {
 		this.edition = edition;
 	}
 
@@ -59,7 +61,8 @@ public class Book extends Item {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("ID: " + getId() + "\n");
-		sb.append("Creation date: " + getCreationDateAsString(getCreationDate()) + "\n");
+		sb.append("Creation date: "
+				+ DateUtil.dateToFormattedStringConverter(getCreationDate()) + "\n");
 		sb.append("Deletion date: " + getDeletionDate() + "\n");
 		sb.append("Created by: " + getUser() + "\n");
 		sb.append("Title: " + getTitle() + "\n");

@@ -1,5 +1,7 @@
 package de.canberk.uni.cd_aap.model;
 
+import de.canberk.uni.cd_aap.util.DateUtil;
+
 public class MusicAlbum extends Item {
 
 	private String label;
@@ -7,7 +9,7 @@ public class MusicAlbum extends Item {
 	private String producer;
 	private String artist;
 	private String format;
-	private int titleCount;
+	private String titleCount;
 
 	public MusicAlbum() {
 		super();
@@ -64,11 +66,11 @@ public class MusicAlbum extends Item {
 		this.format = format;
 	}
 
-	public int getTitleCount() {
+	public String getTitleCount() {
 		return titleCount;
 	}
 
-	public void setTitleCount(int titleCount) {
+	public void setTitleCount(String titleCount) {
 		this.titleCount = titleCount;
 	}
 
@@ -77,7 +79,9 @@ public class MusicAlbum extends Item {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("ID: " + getId() + "\n");
-		sb.append("Creation date: " + getCreationDateAsString(getCreationDate()) + "\n");
+		sb.append("Creation date: "
+				+ DateUtil.dateToFormattedStringConverter(getCreationDate())
+				+ "\n");
 		sb.append("Deletion date: " + getDeletionDate() + "\n");
 		sb.append("Created by: " + getUser() + "\n");
 		sb.append("Title: " + getTitle() + "\n");

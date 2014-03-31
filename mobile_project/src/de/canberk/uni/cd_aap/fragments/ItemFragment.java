@@ -31,6 +31,7 @@ import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.data.DAOItem;
 import de.canberk.uni.cd_aap.model.Item;
 import de.canberk.uni.cd_aap.util.AllItems;
+import de.canberk.uni.cd_aap.util.DateUtil;
 import de.canberk.uni.cd_aap.util.ItemType;
 import de.canberk.uni.cd_aap.util.Logger;
 
@@ -119,7 +120,7 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		et_detailsTitle.setText(item.getTitle());
 		et_detailsGenre.setText(item.getGenre());
 
-		tv_timestamp.setText(item.getCreationDateAsString(item
+		tv_timestamp.setText(DateUtil.dateToFormattedStringConverter(item
 				.getCreationDate()));
 
 		cb_detailsFavorite.setChecked(item.isFavorite());

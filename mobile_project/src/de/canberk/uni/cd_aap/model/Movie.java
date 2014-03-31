@@ -1,5 +1,7 @@
 package de.canberk.uni.cd_aap.model;
 
+import de.canberk.uni.cd_aap.util.DateUtil;
+
 public class Movie extends Item {
 
 	private String producer;
@@ -7,7 +9,7 @@ public class Movie extends Item {
 	private String script;
 	private String actors;
 	private String music;
-	private int length; // in minutes
+	private String length; // in minutes
 
 	public Movie() {
 		super();
@@ -64,11 +66,11 @@ public class Movie extends Item {
 		this.music = music;
 	}
 
-	public int getLength() {
+	public String getLength() {
 		return length;
 	}
 
-	public void setLength(int length) {
+	public void setLength(String length) {
 		this.length = length;
 	}
 
@@ -77,7 +79,9 @@ public class Movie extends Item {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("ID: " + getId() + "\n");
-		sb.append("Creation date: " + getCreationDateAsString(getCreationDate()) + "\n");
+		sb.append("Creation date: "
+				+ DateUtil.dateToFormattedStringConverter(getCreationDate())
+				+ "\n");
 		sb.append("Deletion date: " + getDeletionDate() + "\n");
 		sb.append("Created by: " + getUser() + "\n");
 		sb.append("Title: " + getTitle() + "\n");
