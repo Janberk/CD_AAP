@@ -33,33 +33,23 @@ public class DAOUser {
 	// adding new user
 	public long addUser(User user) {
 		ContentValues values = new ContentValues();
-		values.put(ProjectConstants.FIRST_NAME, user.getFirstname());
-		values.put(ProjectConstants.LAST_NAME, user.getLastname());
-		values.put(ProjectConstants.USER_NAME, user.getUsername());
-		values.put(ProjectConstants.EMAIL, user.getEmail());
-		values.put(ProjectConstants.PASSWORD, user.getPassword());
+		putValues(user, values);
 
 		return sqliteDb.insert(ProjectConstants.TABLE_USERS, null, values);
-
 	}
 
 	// get user
 	public User getUser(int id) {
 		User user = null;
+		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_USERS
+				+ " WHERE " + ProjectConstants.ID + "=" + '"' + id + '"';
 
 		try {
-			Cursor cursor = sqliteDb.query(ProjectConstants.TABLE_USERS,
-					new String[] { ProjectConstants.ID,
-							ProjectConstants.FIRST_NAME,
-							ProjectConstants.LAST_NAME,
-							ProjectConstants.USER_NAME, ProjectConstants.EMAIL,
-							ProjectConstants.PASSWORD }, ProjectConstants.ID
-							+ "=?", new String[] { String.valueOf(id) }, null,
-					null, null, null);
+			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
 
 			if (cursor != null) {
 				cursor.moveToFirst();
-				user = createUser(cursor);
+				user = createUserFromTableValues(cursor);
 			}
 
 		} catch (Exception e) {
@@ -80,7 +70,7 @@ public class DAOUser {
 
 				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
 						.moveToNext()) {
-					User user = createUser(cursor);
+					User user = createUserFromTableValues(cursor);
 
 					userList.add(0, user);
 				}
@@ -95,11 +85,7 @@ public class DAOUser {
 	// update user
 	public boolean updateUser(User user) {
 		ContentValues values = new ContentValues();
-		values.put(ProjectConstants.FIRST_NAME, user.getFirstname());
-		values.put(ProjectConstants.LAST_NAME, user.getLastname());
-		values.put(ProjectConstants.USER_NAME, user.getUsername());
-		values.put(ProjectConstants.EMAIL, user.getEmail());
-		values.put(ProjectConstants.PASSWORD, user.getPassword());
+		putValues(user, values);
 
 		return sqliteDb.update(ProjectConstants.TABLE_USERS, values,
 				ProjectConstants.ID + " = " + user.getId(), null) > 0;
@@ -122,7 +108,7 @@ public class DAOUser {
 		return count;
 	}
 
-	public User createUser(Cursor cursor) {
+	public User createUserFromTableValues(Cursor cursor) {
 		int iRow = cursor.getColumnIndex(ProjectConstants.ID);
 		int iFirstName = cursor.getColumnIndex(ProjectConstants.FIRST_NAME);
 		int iLastName = cursor.getColumnIndex(ProjectConstants.LAST_NAME);
@@ -140,6 +126,14 @@ public class DAOUser {
 		User user = new User(id, firstName, lastName, userName, email, password);
 
 		return user;
+	}
+
+	public void putValues(User user, ContentValues values) {
+		values.put(ProjectConstants.FIRST_NAME, user.getFirstname());
+		values.put(ProjectConstants.LAST_NAME, user.getLastname());
+		values.put(ProjectConstants.USER_NAME, user.getUsername());
+		values.put(ProjectConstants.EMAIL, user.getEmail());
+		values.put(ProjectConstants.PASSWORD, user.getPassword());
 	}
 
 }

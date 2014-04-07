@@ -58,7 +58,6 @@ public class DAOItem {
 			if (cursor != null) {
 				cursor.moveToFirst();
 				item = createItemFromTableValues(cursor);
-
 			}
 
 		} catch (Exception e) {
