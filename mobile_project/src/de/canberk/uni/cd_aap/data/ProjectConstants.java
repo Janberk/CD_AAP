@@ -118,7 +118,7 @@ public class ProjectConstants {
 			+ FIRST_NAME + " TEXT,"
 			+ LAST_NAME + " TEXT,"
 			+ USER_NAME + " TEXT,"
-			+ EMAIL + " TEXT,"
+			+ EMAIL + " TEXT UNIQUE,"
 			+ PASSWORD + " TEXT"
 			+ ")";
 	

@@ -1,6 +1,6 @@
 package de.canberk.uni.cd_aap.model;
 
-import de.canberk.uni.cd_aap.util.DateUtil;
+import de.canberk.uni.cd_aap.util.UtilMethods;
 
 public class Movie extends Item {
 
@@ -80,13 +80,13 @@ public class Movie extends Item {
 
 		sb.append("ID: " + getId() + "\n");
 		sb.append("Creation date: "
-				+ DateUtil.dateToFormattedStringConverter(getCreationDate())
+				+ UtilMethods.dateToFormattedStringConverter(getCreationDate())
 				+ "\n");
 		if (getDeletionDate() == null) {
 			sb.append("Deletion date:\n");
 		} else {
 			sb.append("Deletion date: "
-					+ DateUtil
+					+ UtilMethods
 							.dateToFormattedStringConverter(getDeletionDate())
 					+ "\n");
 		}

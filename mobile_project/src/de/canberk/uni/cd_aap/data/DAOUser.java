@@ -7,7 +7,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.widget.Toast;
 import de.canberk.uni.cd_aap.model.User;
+import de.canberk.uni.cd_aap.util.UtilMethods;
 
 public class DAOUser {
 
@@ -39,10 +41,30 @@ public class DAOUser {
 	}
 
 	// get user
-	public User getUser(int id) {
+	public User findUserById(int id) {
 		User user = null;
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_USERS
 				+ " WHERE " + ProjectConstants.ID + "=" + '"' + id + '"';
+
+		try {
+			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
+
+			if (cursor != null) {
+				cursor.moveToFirst();
+				user = createUserFromTableValues(cursor);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+
+	public User findUserByLogin(String email, String password) {
+		User user = null;
+		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_USERS
+				+ " WHERE " + ProjectConstants.EMAIL + "='" + email + "' AND "
+				+ ProjectConstants.PASSWORD + "='" + password + "'";
 
 		try {
 			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
@@ -115,6 +137,9 @@ public class DAOUser {
 		int iUserName = cursor.getColumnIndex(ProjectConstants.USER_NAME);
 		int iEmail = cursor.getColumnIndex(ProjectConstants.EMAIL);
 		int iPassword = cursor.getColumnIndex(ProjectConstants.PASSWORD);
+		int iCreationDate = cursor
+				.getColumnIndex(ProjectConstants.CREATION_DATE);
+		int iDeleted = cursor.getColumnIndex(ProjectConstants.DELETED);
 
 		int id = Integer.parseInt(cursor.getString(iRow));
 		String firstName = cursor.getString(iFirstName);
@@ -122,8 +147,13 @@ public class DAOUser {
 		String userName = cursor.getString(iUserName);
 		String email = cursor.getString(iEmail);
 		String password = cursor.getString(iPassword);
+		String creationDate = cursor.getString(iCreationDate);
+		int deletedAsInt = (Integer.parseInt(cursor.getString(iDeleted)));
 
 		User user = new User(id, firstName, lastName, userName, email, password);
+		user.setCreationDate(UtilMethods
+				.setCreationDateFromString(creationDate));
+		user.setDeleted(UtilMethods.isTrue(deletedAsInt));
 
 		return user;
 	}
@@ -134,6 +164,37 @@ public class DAOUser {
 		values.put(ProjectConstants.USER_NAME, user.getUsername());
 		values.put(ProjectConstants.EMAIL, user.getEmail());
 		values.put(ProjectConstants.PASSWORD, user.getPassword());
+		values.put(ProjectConstants.CREATION_DATE, UtilMethods
+				.dateToFormattedStringConverter(user.getCreationDate()));
+		if (user.getDeletionDate() != null) {
+			values.put(ProjectConstants.DELETION_DATE, UtilMethods
+					.dateToFormattedStringConverter(user.getDeletionDate()));
+		}
+		values.put(ProjectConstants.DELETED,
+				UtilMethods.isTrueAsInt(user.isDeleted()));
+	}
+
+	// check already existing users
+	public boolean alreadyExists(String email, String username) {
+		Cursor cursorEmail = sqliteDb.query(ProjectConstants.TABLE_USERS,
+				new String[] { ProjectConstants.ID, ProjectConstants.EMAIL },
+				ProjectConstants.EMAIL + "='" + email + "'", null, null, null,
+				null);
+		Cursor cursorUserName = sqliteDb
+				.query(ProjectConstants.TABLE_USERS, new String[] {
+						ProjectConstants.ID, ProjectConstants.USER_NAME },
+						ProjectConstants.USER_NAME + "='" + username + "'",
+						null, null, null, null);
+		if (cursorEmail == null || cursorUserName == null) {
+			Toast.makeText(context, "Database query error", Toast.LENGTH_SHORT)
+					.show();
+		} else {
+			if (cursorEmail.getCount() > 0 || cursorUserName.getCount() > 0) {
+				cursorEmail.close();
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

@@ -13,8 +13,8 @@ import de.canberk.uni.cd_aap.model.Item;
 import de.canberk.uni.cd_aap.model.Movie;
 import de.canberk.uni.cd_aap.model.MusicAlbum;
 import de.canberk.uni.cd_aap.util.CoverUtil;
-import de.canberk.uni.cd_aap.util.DateUtil;
 import de.canberk.uni.cd_aap.util.ItemType;
+import de.canberk.uni.cd_aap.util.UtilMethods;
 
 public class DAOItem {
 
@@ -41,8 +41,8 @@ public class DAOItem {
 	public long addItem(Item item) {
 		ContentValues values = new ContentValues();
 		putValues(item, values);
-		values.put(ProjectConstants.CREATION_DATE,
-				DateUtil.dateToFormattedStringConverter(item.getCreationDate()));
+		values.put(ProjectConstants.CREATION_DATE, UtilMethods
+				.dateToFormattedStringConverter(item.getCreationDate()));
 
 		return sqliteDb.insert(ProjectConstants.TABLE_ITEMS, null, values);
 	}
@@ -167,31 +167,25 @@ public class DAOItem {
 		switch (type) {
 		case Album:
 			item = new MusicAlbum(id, user, title, itemType, genre,
-					isTrue(favoriteAsInt));
+					UtilMethods.isTrue(favoriteAsInt));
 			break;
 		case Book:
 			item = new Book(id, user, title, itemType, genre,
-					isTrue(favoriteAsInt));
+					UtilMethods.isTrue(favoriteAsInt));
 			break;
 		case Movie:
 			item = new Movie(id, user, title, itemType, genre,
-					isTrue(favoriteAsInt));
+					UtilMethods.isTrue(favoriteAsInt));
 			break;
 		default:
 			break;
 		}
 		item.setCover(cover);
-		item.setCreationDateFromString(creationDate);
-		item.setInPossession(isTrue(inPossessionAsInt));
-		item.setDeleted(isTrue(deletedAsInt));
+		item.setCreationDate(UtilMethods
+				.setCreationDateFromString(creationDate));
+		item.setInPossession(UtilMethods.isTrue(inPossessionAsInt));
+		item.setDeleted(UtilMethods.isTrue(deletedAsInt));
 		return item;
-	}
-
-	public boolean isTrue(int valueToCheck) {
-		if (valueToCheck == 1) {
-			return true;
-		}
-		return false;
 	}
 
 	public void putValues(Item item, ContentValues values) {
@@ -202,18 +196,19 @@ public class DAOItem {
 		values.put(ProjectConstants.TYPE, item.getType().toString());
 		values.put(ProjectConstants.GENRE, item.getGenre());
 		values.put(ProjectConstants.IN_POSSESSION,
-				item.isTrueAsInt(item.isInPossession()));
+				UtilMethods.isTrueAsInt(item.isInPossession()));
 		values.put(ProjectConstants.FAVORITE,
-				item.isTrueAsInt(item.isFavorite()));
-		values.put(ProjectConstants.DELETED, item.isTrueAsInt(item.isDeleted()));
-		
+				UtilMethods.isTrueAsInt(item.isFavorite()));
+		values.put(ProjectConstants.DELETED,
+				UtilMethods.isTrueAsInt(item.isDeleted()));
+
 		if (item.getDeletionDate() != null) {
-			values.put(ProjectConstants.DELETION_DATE,
-					DateUtil.dateToFormattedStringConverter(item.getDeletionDate()));
+			values.put(ProjectConstants.DELETION_DATE, UtilMethods
+					.dateToFormattedStringConverter(item.getDeletionDate()));
 		}
-		
+
 		values.put(ProjectConstants.ORIGINAL_TITLE,
-				item.isTrueAsInt(item.isDeleted()));
+				UtilMethods.isTrueAsInt(item.isDeleted()));
 		values.put(ProjectConstants.COUNTRY, item.getCountry());
 		values.put(ProjectConstants.YEAR_PUBLISHED, item.getYearPublished());
 		values.put(ProjectConstants.CONTENT, item.getContent());

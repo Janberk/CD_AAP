@@ -123,12 +123,21 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textColor="#ede9ff" />
+            
+            <EditText
+                android:id="@+id/et_confirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_password"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword"
+                android:textColor="#ede9ff" />
 
             <Button
                 android:id="@+id/btn_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/et_password"
+                android:layout_below="@+id/et_confirmPassword"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:background="#2c436f"

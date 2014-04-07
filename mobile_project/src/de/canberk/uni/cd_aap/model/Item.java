@@ -1,11 +1,6 @@
 package de.canberk.uni.cd_aap.model;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import android.graphics.Bitmap;
 import de.canberk.uni.cd_aap.util.CoverUtil;
@@ -186,27 +181,6 @@ public abstract class Item {
 
 	public void setRating(String rating) {
 		this.rating = rating;
-	}
-
-	public int isTrueAsInt(boolean isTrue) {
-		if (isTrue) {
-			return 1;
-		}
-		return 0;
-	}
-
-	public void setCreationDateFromString(String timestamp) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.GERMAN);
-		dateFormat.setTimeZone(TimeZone.getTimeZone("CET"));
-		Date newDate = new Date();
-
-		try {
-			newDate = dateFormat.parse(timestamp);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		this.creationDate = newDate;
 	}
 
 	@Override

@@ -1,13 +1,6 @@
 package de.canberk.uni.cd_aap.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,31 +13,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
 import de.canberk.uni.cd_aap.activities.LoginActivity;
-import de.canberk.uni.cd_aap.util.HTTPRequestHandler;
+import de.canberk.uni.cd_aap.data.DAOUser;
+import de.canberk.uni.cd_aap.model.User;
+import de.canberk.uni.cd_aap.util.UtilMethods;
 
 public class SignupFragment extends Fragment {
 
-	private HTTPRequestHandler httpPost;
+	private DAOUser daoUser;
 
 	private EditText et_firstname;
 	private EditText et_lastname;
 	private EditText et_username;
 	private EditText et_email;
 	private EditText et_password;
+	private EditText et_confirmPassword;
 	private Button btn_signup;
 	private TextView tv_login_link;
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		httpPost = new HTTPRequestHandler(
-				"http://10.0.2.2:80/development/examples/registration_form/backend_android/user_data.php");
+		daoUser = new DAOUser(getActivity());
+		daoUser.open();
 
 	}
 
@@ -58,15 +49,16 @@ public class SignupFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				new AsyncHTTPRequest().execute(httpPost.getUri());
+				signupUser(v);
 			}
 		});
 
 		tv_login_link.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), LoginActivity.class);
+			public void onClick(View view) {
+				Intent intent = new Intent(view.getContext(),
+						LoginActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -80,72 +72,69 @@ public class SignupFragment extends Fragment {
 		et_username = (EditText) view.findViewById(R.id.et_username);
 		et_email = (EditText) view.findViewById(R.id.et_email);
 		et_password = (EditText) view.findViewById(R.id.et_password);
+		et_confirmPassword = (EditText) view
+				.findViewById(R.id.et_confirmPassword);
 		btn_signup = (Button) view.findViewById(R.id.btn_signup);
 		tv_login_link = (TextView) view.findViewById(R.id.tv_login_link);
 	}
 
-	public class AsyncHTTPRequest extends AsyncTask<String, Integer, String> {
+	public void signupUser(View view) {
+		// Get user details.
+		String enteredFirstName = et_firstname.getText().toString();
+		String enteredLastName = et_lastname.getText().toString();
+		String enteredUserName = et_username.getText().toString();
+		String enteredEmail = et_email.getText().toString();
+		String enteredPassword = et_password.getText().toString();
+		String enteredConfirmPassword = et_confirmPassword.getText().toString();
 
-		@Override
-		protected String doInBackground(String... params) {
-			return httpPost.readHTTPPostResponse(createParams());
+		// Check if all fields have been completed.
+		if (enteredFirstName.equals("") || enteredLastName.equals("")
+				|| enteredUserName.equals("") || enteredEmail.equals("")
+				|| enteredPassword.equals("")
+				|| enteredConfirmPassword.equals("")) {
+			Toast.makeText(getActivity(),
+					"Please ensure all fields have been completed.",
+					Toast.LENGTH_SHORT).show();
+			return;
 		}
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			checkResult(result);
+		// Check password match.
+		if (!enteredPassword.equals(enteredConfirmPassword)) {
+			Toast.makeText(getActivity(), "The password does not match.",
+					Toast.LENGTH_SHORT).show();
+			et_password.setText("");
+			et_confirmPassword.setText("");
+			return;
 		}
-	}
 
-	private void checkResult(String result) {
-		if (result != null) {
-			int key = Integer.valueOf(result);
-			switch (key) {
-			case LoginFragment.RESPONSE_CODE_SUCCESS:
-				Toast.makeText(getActivity().getApplicationContext(),
-						"User was saved successfully. Back to log in.",
-						Toast.LENGTH_LONG).show();
-				Intent intent = new Intent(getActivity()
-						.getApplicationContext(), LoginActivity.class);
+		// Encrypt password with MD5.
+		enteredPassword = UtilMethods.md5(enteredPassword);
+
+		// Check database for existing users.
+		// User user = daoUser.findUserByLogin(enteredEmail, enteredPassword);
+
+		if (daoUser.alreadyExists(enteredEmail, enteredUserName)) {
+			Toast.makeText(getActivity(), "This user data already exists!",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			User user = new User(enteredFirstName, enteredLastName,
+					enteredUserName, enteredEmail, enteredPassword);
+			long id = daoUser.addUser(user);
+
+			if (id > 0) {
+				Toast.makeText(getActivity(), "Your account was created",
+						Toast.LENGTH_SHORT).show();
+				// saveLoggedInUId(id, username,
+				// newPassword.getText().toString());
+				Intent intent = new Intent(view.getContext(),
+						LoginActivity.class);
 				startActivity(intent);
-				break;
-			case LoginFragment.RESPONSE_CODE_EMPTY_FIELDS:
-				Toast.makeText(getActivity().getApplicationContext(),
-						"Please fill in all fields.", Toast.LENGTH_LONG).show();
-				break;
-			case LoginFragment.RESPONSE_CODE_INVALID_DATA:
-				Toast.makeText(getActivity().getApplicationContext(),
-						"You entered invalid data. Please try again.",
-						Toast.LENGTH_LONG).show();
-				break;
-			case LoginFragment.RESPONSE_CODE_NO_GET:
-				Toast.makeText(getActivity().getApplicationContext(),
-						"ERROR while trying to connect to server!",
-						Toast.LENGTH_LONG).show();
-				break;
-			default:
-				break;
+				getActivity().finish();
+			} else {
+				Toast.makeText(getActivity(), "Failt to create new account",
+						Toast.LENGTH_SHORT).show();
 			}
 		}
-	}
-
-	public List<NameValuePair> createParams() {
-		List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-
-		String firstname = et_firstname.getText().toString();
-		String lastname = et_lastname.getText().toString();
-		String username = et_username.getText().toString();
-		String email = et_email.getText().toString();
-		String password = et_password.getText().toString();
-
-		params.add(new BasicNameValuePair("firstname", firstname));
-		params.add(new BasicNameValuePair("lastname", lastname));
-		params.add(new BasicNameValuePair("username", username));
-		params.add(new BasicNameValuePair("email", email));
-		params.add(new BasicNameValuePair("password", password));
-
-		return params;
 	}
 
 	@Override

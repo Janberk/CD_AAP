@@ -7,5 +7,8 @@
     <dimen name="app_margin_4dp">4dp</dimen>
     <dimen name="app_padding">4dp</dimen>
     <dimen name="app_padding_8dp">8dp</dimen>
+    <dimen name="ui_element_margin_TopBottom_8dp">8dp</dimen>
+    <dimen name="ui_element_margin_LeftRight_16dp">16dp</dimen>
+    <dimen name="ui_element_padding_8dp">8dp</dimen>
 
 </resources>

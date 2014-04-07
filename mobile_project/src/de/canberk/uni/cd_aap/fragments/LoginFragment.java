@@ -61,8 +61,10 @@ public class LoginFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+//		httpPost = new HTTPRequestHandler(
+//				"http://10.0.2.2:80/development/examples/registration_form/backend_android/check_login.php");
 		httpPost = new HTTPRequestHandler(
-				"http://10.0.2.2:80/development/examples/registration_form/backend_android/check_login.php");
+				"http://192.168.1.50:8080/development/examples/registration_form/backend_android/check_login.php");
 	}
 
 	@Override
@@ -126,6 +128,7 @@ public class LoginFragment extends Fragment {
 
 			if (!validEmail && editTextIsEmpty(et_email)) {
 				et_email.setError("Invalid Email!");
+				btn_login.setEnabled(false);
 			}
 		}
 

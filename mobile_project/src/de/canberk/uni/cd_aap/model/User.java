@@ -1,11 +1,12 @@
 package de.canberk.uni.cd_aap.model;
 
-import java.util.Calendar;
 import java.util.Date;
+
+import de.canberk.uni.cd_aap.util.UtilMethods;
 
 public class User {
 
-	private int id;
+	private long id;
 	private Date creationDate;
 	private boolean deleted;
 	private Date deletionDate;
@@ -17,39 +18,36 @@ public class User {
 	private String password;
 
 	public User() {
-		creationDate = new Date();
-		setDeleted(false);
+		setCreationDate(new Date());
 	}
 
 	public User(String firstname, String lastname, String username,
 			String email, String password) {
-		creationDate = new Date();
+		setCreationDate(new Date());
 		setFirstname(firstname);
 		setLastname(lastname);
 		setUsername(username);
 		setEmail(email);
 		setPassword(password);
-		setDeleted(false);
 	}
 
-	public User(int id, String firstname, String lastname, String username,
+	public User(long id, String firstname, String lastname, String username,
 			String email, String password) {
 		setId(id);
-		creationDate = new Date();
+		setCreationDate(new Date());
 		setFirstname(firstname);
 		setLastname(lastname);
 		setUsername(username);
 		setEmail(email);
 		setPassword(password);
-		setDeleted(false);
 	}
 
 	// getters and setters
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -117,23 +115,22 @@ public class User {
 		this.password = password;
 	}
 
-	public String getDateAsString() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(creationDate);
-
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH) + 1;
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-		return day + "." + month + "." + year;
-	}
-
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("ID: " + getId() + "\n");
-		sb.append("Creation date: " + getDateAsString() + "\n");
+		sb.append("Creation date: "
+				+ UtilMethods.dateToFormattedStringConverter(getCreationDate())
+				+ "\n");
+		if (getDeletionDate() == null) {
+			sb.append("Deletion date:\n");
+		} else {
+			sb.append("Deletion date: "
+					+ UtilMethods
+							.dateToFormattedStringConverter(getDeletionDate())
+					+ "\n");
+		}
 		sb.append("First name: " + getFirstname() + "\n");
 		sb.append("Last name: " + getLastname() + "\n");
 		sb.append("User name: " + getUsername() + "\n");

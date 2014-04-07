@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2d2d2d"
+        android:background="#c0d1e9"
         android:paddingBottom="@dimen/app_padding_8dp"
         android:paddingLeft="@dimen/app_padding_8dp"
         android:paddingRight="@dimen/app_padding_8dp"
@@ -74,36 +74,25 @@
 
             <EditText
                 android:id="@+id/et_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="30dp"
+                style="@style/inputStyle.inputTextStyle.input"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:textColor="#ede9ff" >
+                android:inputType="textEmailAddress" >
 
                 <requestFocus />
             </EditText>
 
             <EditText
                 android:id="@+id/et_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/inputStyle.inputTextStyle.input"
                 android:layout_below="@+id/et_email"
                 android:hint="@string/password"
-                android:inputType="textPassword"
-                android:textColor="#ede9ff" />
+                android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/btnStyle.btnTextStyle.btnBig"
                 android:layout_below="@+id/et_password"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:background="#2c436f"
-                android:text="@string/login"
-                android:textColor="#ede9ff" />
+                android:text="@string/login" />
         </RelativeLayout>
     </RelativeLayout>
 
