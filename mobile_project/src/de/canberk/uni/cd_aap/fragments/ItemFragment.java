@@ -266,21 +266,25 @@ public class ItemFragment extends Fragment implements OnItemSelectedListener {
 		if (requestCode == ProjectConstants.REQUEST_CODE) {
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+			Cursor cursor = null;
 
-			Cursor cursor = getActivity().getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
-			cursor.moveToFirst();
+			try {
+				cursor = getActivity().getContentResolver().query(
+						selectedImage, filePathColumn, null, null, null);
+				cursor.moveToFirst();
 
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			String picturePath = cursor.getString(columnIndex);
-			cursor.close();
-
-			Bitmap bitmap = Bitmap
-					.createBitmap(48, 72, Bitmap.Config.ARGB_8888);
-			bitmap = BitmapFactory.decodeFile(picturePath);
-			iv_itemCover.setImageBitmap(bitmap);
-			item.setCover(bitmap);
-
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String picturePath = cursor.getString(columnIndex);
+				Bitmap bitmap = Bitmap.createBitmap(48, 72,
+						Bitmap.Config.ARGB_8888);
+				bitmap = BitmapFactory.decodeFile(picturePath);
+				iv_itemCover.setImageBitmap(bitmap);
+				item.setCover(bitmap);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				cursor.close();
+			}
 		}
 	}
 

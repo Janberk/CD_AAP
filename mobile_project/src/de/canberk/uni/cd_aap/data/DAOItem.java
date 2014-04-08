@@ -49,11 +49,12 @@ public class DAOItem {
 
 	public Item getItem(int id) {
 		Item item = null;
+		Cursor cursor = null;
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_ITEMS
 				+ " WHERE " + ProjectConstants.ID + "=" + '"' + id + '"';
 
 		try {
-			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
+			cursor = sqliteDb.rawQuery(selectQuery, null);
 
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -62,6 +63,8 @@ public class DAOItem {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			cursor.close();
 		}
 		return item;
 	}
@@ -69,11 +72,12 @@ public class DAOItem {
 	// get all items
 	public ArrayList<Item> getAllItems(String user) {
 		ArrayList<Item> itemList = new ArrayList<Item>();
+		Cursor cursor = null;
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_ITEMS
 				+ " WHERE " + ProjectConstants.USER + "=" + '"' + user + '"';
 
 		try {
-			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
+			cursor = sqliteDb.rawQuery(selectQuery, null);
 
 			if (cursor != null) {
 
@@ -83,10 +87,13 @@ public class DAOItem {
 
 					itemList.add(0, item);
 				}
-				cursor.close();
 			}
 		} catch (Exception e) {
 			itemList = new ArrayList<Item>();
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
 		}
 		return itemList;
 	}
@@ -108,12 +115,17 @@ public class DAOItem {
 
 	// get item count
 	public int getItemCount() {
-		int count;
+		int count = -1;
+		Cursor cursor = null;
 		String countQuery = "SELECT  * FROM " + ProjectConstants.TABLE_ITEMS;
-		Cursor cursor = sqliteDb.rawQuery(countQuery, null);
-		count = cursor.getCount();
-		cursor.close();
-
+		try {
+			cursor = sqliteDb.rawQuery(countQuery, null);
+			count = cursor.getCount();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+		}
 		return count;
 	}
 
@@ -207,8 +219,7 @@ public class DAOItem {
 					.dateToFormattedStringConverter(item.getDeletionDate()));
 		}
 
-		values.put(ProjectConstants.ORIGINAL_TITLE,
-				UtilMethods.isTrueAsInt(item.isDeleted()));
+		values.put(ProjectConstants.ORIGINAL_TITLE, item.getOriginalTitle());
 		values.put(ProjectConstants.COUNTRY, item.getCountry());
 		values.put(ProjectConstants.YEAR_PUBLISHED, item.getYearPublished());
 		values.put(ProjectConstants.CONTENT, item.getContent());

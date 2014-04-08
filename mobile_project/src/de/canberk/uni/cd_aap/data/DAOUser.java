@@ -43,11 +43,12 @@ public class DAOUser {
 	// get user
 	public User findUserById(int id) {
 		User user = null;
+		Cursor cursor = null;
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_USERS
 				+ " WHERE " + ProjectConstants.ID + "=" + '"' + id + '"';
 
 		try {
-			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
+			cursor = sqliteDb.rawQuery(selectQuery, null);
 
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -56,18 +57,21 @@ public class DAOUser {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			cursor.close();
 		}
 		return user;
 	}
 
 	public User findUserByLogin(String email, String password) {
 		User user = null;
+		Cursor cursor = null;
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_USERS
 				+ " WHERE " + ProjectConstants.EMAIL + "='" + email + "' AND "
 				+ ProjectConstants.PASSWORD + "='" + password + "'";
 
 		try {
-			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
+			cursor = sqliteDb.rawQuery(selectQuery, null);
 
 			if (cursor != null) {
 				cursor.moveToFirst();
@@ -76,6 +80,8 @@ public class DAOUser {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			cursor.close();
 		}
 		return user;
 	}
@@ -83,10 +89,11 @@ public class DAOUser {
 	// get all users
 	public ArrayList<User> getAllUsers() {
 		ArrayList<User> userList = new ArrayList<User>();
+		Cursor cursor = null;
 		String selectQuery = "SELECT * FROM " + ProjectConstants.TABLE_USERS;
 
 		try {
-			Cursor cursor = sqliteDb.rawQuery(selectQuery, null);
+			cursor = sqliteDb.rawQuery(selectQuery, null);
 
 			if (cursor != null) {
 
@@ -96,10 +103,11 @@ public class DAOUser {
 
 					userList.add(0, user);
 				}
-				cursor.close();
 			}
 		} catch (Exception e) {
 			userList = new ArrayList<User>();
+		} finally {
+			cursor.close();
 		}
 		return userList;
 	}
@@ -119,14 +127,19 @@ public class DAOUser {
 				ProjectConstants.ID + " = " + user.getId(), null) > 0;
 	}
 
-	// get user count
-	public int getUserCount() {
-		int count;
+	// get item count
+	public int getItemCount() {
+		int count = -1;
+		Cursor cursor = null;
 		String countQuery = "SELECT  * FROM " + ProjectConstants.TABLE_USERS;
-		Cursor cursor = sqliteDb.rawQuery(countQuery, null);
-		count = cursor.getCount();
-		cursor.close();
-
+		try {
+			cursor = sqliteDb.rawQuery(countQuery, null);
+			count = cursor.getCount();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+		}
 		return count;
 	}
 

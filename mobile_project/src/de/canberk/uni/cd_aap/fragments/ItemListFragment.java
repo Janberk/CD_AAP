@@ -123,7 +123,6 @@ public class ItemListFragment extends Fragment {
 				Intent newIntent = new Intent(getActivity(), Z_App.class);
 				newIntent.putExtra(ProjectConstants.KEY_ITEM_ID,
 						clickedItem.getId());
-
 				startActivityForResult(newIntent, 0);
 			}
 		});
