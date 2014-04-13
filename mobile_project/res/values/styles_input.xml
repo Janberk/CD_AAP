@@ -15,6 +15,7 @@
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/input_color</item>
+        <item name="android:textColorHint">#6d6e71</item>
         <item name="android:paddingLeft">@dimen/ui_element_padding_8dp</item>
     </style>
     

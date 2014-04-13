@@ -126,7 +126,7 @@ public class ItemListFragment extends Fragment {
 				startActivityForResult(newIntent, 0);
 			}
 		});
-
+		
 		et_newItemTitle = (EditText) view.findViewById(R.id.et_newItemTitle);
 
 		btn_addItem = (Button) view.findViewById(R.id.btn_add);

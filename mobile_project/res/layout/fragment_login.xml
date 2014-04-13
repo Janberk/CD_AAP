@@ -9,56 +9,26 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#c0d1e9"
+        android:background="@drawable/styles_gradient"
         android:paddingBottom="@dimen/app_padding_8dp"
         android:paddingLeft="@dimen/app_padding_8dp"
         android:paddingRight="@dimen/app_padding_8dp"
         android:paddingTop="@dimen/app_padding_8dp" >
 
         <RelativeLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="@layout/header_gradient"
-            android:paddingBottom="@dimen/app_padding_8dp"
-            android:paddingTop="@dimen/app_padding_8dp" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/app_margin"
-                android:contentDescription="@string/logo"
-                android:src="@drawable/ic_launcher" />
-
-            <TextView
-                android:id="@+id/tv_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-                android:text="@string/app_name"
-                android:textColor="#ede9ff"
-                android:textSize="26sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" >
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="32dp" >
 
             <TextView
                 android:id="@+id/tv_signup_link"
+                style="@style/linkStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:text="@string/sign_up_link"
-                android:textColor="#ede9ff"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_centerHorizontal="true"                
+                android:text="@string/sign_up_link" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -66,20 +36,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/footer"
-            android:layout_below="@+id/header"
-            android:paddingBottom="@dimen/app_padding_8dp"
-            android:paddingLeft="@dimen/app_padding_8dp"
-            android:paddingRight="@dimen/app_padding_8dp"
-            android:paddingTop="@dimen/app_padding_8dp" >
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="100dp" >
 
             <EditText
                 android:id="@+id/et_email"
                 style="@style/inputStyle.inputTextStyle.input"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress" >
-
-                <requestFocus />
-            </EditText>
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/et_password"
@@ -94,6 +59,7 @@
                 android:layout_below="@+id/et_password"
                 android:text="@string/login" />
         </RelativeLayout>
+
     </RelativeLayout>
 
 </ScrollView>
