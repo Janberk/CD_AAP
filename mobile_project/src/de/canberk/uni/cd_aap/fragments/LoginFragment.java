@@ -127,7 +127,7 @@ public class LoginFragment extends Fragment {
 			boolean validEmail = validateEmail(et_email.getText().toString());
 
 			if (!validEmail && editTextIsEmpty(et_email)) {
-				et_email.setError("Invalid Email!");
+				// et_email.setError("Invalid Email!");
 				btn_login.setEnabled(false);
 			}
 		}
