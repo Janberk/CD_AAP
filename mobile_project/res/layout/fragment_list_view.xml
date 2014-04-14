@@ -2,32 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#181818" >
 
     <ListView
         android:id="@+id/itemList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_add" />
+        android:layout_below="@+id/btn_add"
+        android:layout_margin="@dimen/app_margin_4dp" />
 
     <EditText
         android:id="@+id/et_newItemTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/inputStyle.inputTextStyle.input"
         android:layout_above="@android:id/list"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/app_padding_8dp"
         android:layout_toLeftOf="@+id/btn_add"
-        android:ems="10"
         android:hint="@string/title" />
 
     <Button
         android:id="@+id/btn_add"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/et_newItemTitle"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/et_newItemTitle"
         android:layout_margin="@dimen/app_padding"
         android:background="#467056"
         android:text="@string/add"

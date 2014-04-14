@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/styles_gradient"
+        android:background="#181818"
         android:paddingBottom="@dimen/app_padding_8dp"
         android:paddingLeft="@dimen/app_padding_8dp"
         android:paddingRight="@dimen/app_padding_8dp"
@@ -27,7 +27,7 @@
                 style="@style/linkStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"                
+                android:layout_centerHorizontal="true"              
                 android:text="@string/sign_up_link" />
         </RelativeLayout>
 
@@ -35,16 +35,18 @@
             android:id="@+id/form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/footer"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="100dp" >
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="48dp" >
 
             <EditText
                 android:id="@+id/et_email"
                 style="@style/inputStyle.inputTextStyle.input"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress" >
+
+                <requestFocus />
+            </EditText>
 
             <EditText
                 android:id="@+id/et_password"
