@@ -27,6 +27,10 @@
     <string name="login_in_link">Go back to Login-Screen!</string>
     <string name="welcome">Welcome User :)</string>
     <string name="type_dialog_message">Choose the type of your media.</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="enter_login">Enter your E-mail and Password</string>
+    <string name="sign_up">Enter your personal data</string>
 
     <string-array name="item_types">
         <item>Album</item>

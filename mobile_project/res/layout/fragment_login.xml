@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#181818"
+        android:background="#000022"
         android:paddingBottom="@dimen/app_padding_8dp"
         android:paddingLeft="@dimen/app_padding_8dp"
         android:paddingRight="@dimen/app_padding_8dp"
@@ -20,48 +20,75 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="32dp" >
+            android:layout_marginBottom="24dp" >
 
             <TextView
                 android:id="@+id/tv_signup_link"
-                style="@style/linkStyle"
+                style="@style/textViewForm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"              
+                android:layout_below="@+id/tv_forgotPassword"
+                android:layout_centerHorizontal="true"                
                 android:text="@string/sign_up_link" />
+
+            <TextView
+                android:id="@+id/tv_forgotPassword"
+                style="@style/textViewForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/forgot_password" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="48dp" >
-
-            <EditText
-                android:id="@+id/et_email"
-                style="@style/inputStyle.inputTextStyle.input"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress" >
-
-                <requestFocus />
-            </EditText>
+            android:layout_marginTop="20dp" >
 
             <EditText
                 android:id="@+id/et_password"
-                style="@style/inputStyle.inputTextStyle.input"
+                style="@style/editTextForm.textStyle.input"
                 android:layout_below="@+id/et_email"
                 android:hint="@string/password"
                 android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/btn_login"
-                style="@style/btnStyle.btnTextStyle.btnBig"
+                style="@style/buttonForm.textStyle.big"
                 android:layout_below="@+id/et_password"
                 android:text="@string/login" />
-        </RelativeLayout>
 
+            <EditText
+                android:id="@+id/et_email"
+                style="@style/editTextForm.textStyle.input"
+                android:layout_below="@+id/tv_enterLogin"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" >
+
+                <requestFocus />
+            </EditText>
+
+            <TextView
+                android:id="@+id/tv_enterLogin"
+                style="@style/textViewForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/et_email"
+                android:layout_alignParentTop="true"
+                android:text="@string/enter_login" />
+
+            <CheckBox
+                android:id="@+id/cb_rememberMe"
+                style="@style/textViewForm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/btn_login"
+                android:layout_below="@+id/btn_login"
+                android:text="@string/remember_me" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </ScrollView>

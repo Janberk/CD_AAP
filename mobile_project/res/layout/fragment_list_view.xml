@@ -2,8 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#000022"
     android:orientation="vertical"
-    android:background="#181818" >
+    android:paddingBottom="@dimen/app_padding_8dp"
+    android:paddingLeft="@dimen/app_padding_8dp"
+    android:paddingRight="@dimen/app_padding_8dp"
+    android:paddingTop="@dimen/app_padding_8dp" >
 
     <ListView
         android:id="@+id/itemList"
@@ -12,26 +16,24 @@
         android:layout_below="@+id/btn_add"
         android:layout_margin="@dimen/app_margin_4dp" />
 
-    <EditText
-        android:id="@+id/et_newItemTitle"
-        style="@style/inputStyle.inputTextStyle.input"
-        android:layout_above="@android:id/list"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/btn_add"
-        android:hint="@string/title" />
-
     <Button
         android:id="@+id/btn_add"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/et_newItemTitle"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/et_newItemTitle"
-        android:layout_margin="@dimen/app_padding"
-        android:background="#467056"
-        android:text="@string/add"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold" />
+        style="@style/buttonAdd.textStyle.small"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/itemList"
+        android:text="@string/add" />
+
+    <EditText
+        android:id="@+id/et_newItemTitle"
+        style="@style/editTextForm.textStyle.input"
+        android:layout_alignLeft="@+id/itemList"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/btn_add"
+        android:layout_marginRight="@dimen/ui_element_padding_8dp"
+        android:hint="@string/title"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>
