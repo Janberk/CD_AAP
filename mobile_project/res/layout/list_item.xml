@@ -1,53 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout1"
+    android:background="@drawable/list_item_shape"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:padding="@dimen/ui_element_padding_8dp"
-    android:background="#f0f8ff" >
+    android:layout_margin="@dimen/ui_element_margin_TopBottom_8dp"
+    android:padding="@dimen/ui_element_padding_8dp" >
 
-    <ImageView
-        android:id="@+id/iv_itemIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/cover"
-        android:src="@drawable/ic_launcher" />
+        <CheckBox
+            android:id="@+id/cb_itemFavorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:enabled="false"
+            android:focusable="false"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/tv_itemTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_alignTop="@+id/iv_itemIcon"
-        android:layout_toRightOf="@+id/iv_itemIcon"
-        android:padding="@dimen/app_padding"
-        android:text="@string/title"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/iv_itemIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/cover"
+            android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/tv_itemGenre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_itemTitle"
-        android:layout_below="@+id/tv_itemTitle"
-        android:padding="@dimen/app_padding"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:text="@string/genre"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_itemTitle"
+            style="@style/textViewList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/iv_itemIcon"
+            android:text="@string/title" />
 
-    <CheckBox
-        android:id="@+id/cb_itemFavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:enabled="false"
-        android:focusable="false"
-        android:gravity="center" />
-
+        <TextView
+            android:id="@+id/tv_itemGenre"
+            style="@style/textViewList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iv_itemIcon"
+            android:layout_alignLeft="@+id/tv_itemTitle"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="@string/genre"
+            android:textSize="12sp"
+            android:textStyle="normal" />
 </RelativeLayout>
