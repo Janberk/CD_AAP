@@ -9,8 +9,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import android.widget.ImageView;
+import de.canberk.uni.cd_aap.R;
+
 public class UtilMethods {
-	
+
 	public static String dateToFormattedStringConverter(Date date) {
 		String timestampAsString = null;
 
@@ -70,6 +73,28 @@ public class UtilMethods {
 			return 1;
 		}
 		return 0;
+	}
+
+	public static void setCustomIconToTypeOfMedia(ImageView itemIcon,
+			ItemType type) {
+
+		switch (type) {
+
+		case Album:
+			itemIcon.setImageResource(R.drawable.icon_music);
+			break;
+		case Book:
+			itemIcon.setImageResource(R.drawable.icon_book);
+			break;
+		case Movie:
+			itemIcon.setImageResource(R.drawable.icon_movie);
+			break;
+
+		default:
+			itemIcon.setImageResource(R.drawable.ic_launcher);
+			break;
+		}
+
 	}
 
 }

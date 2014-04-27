@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import de.canberk.uni.cd_aap.R;
 
@@ -30,6 +31,25 @@ public class SelectItemAdapter extends ArrayAdapter<String> {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.select_list_item, null);
 		}
+
+		String typeAsString = listEntries.get(position);
+		ItemType type = null;
+
+		if (typeAsString.equals(ItemType.All.name())) {
+			type = ItemType.All;
+		} else if (typeAsString.equals(ItemType.Album.name())) {
+			type = ItemType.Album;
+		} else if (typeAsString.equals(ItemType.Book.name())) {
+			type = ItemType.Book;
+		} else if (typeAsString.equals(ItemType.Movie.name())) {
+			type = ItemType.Movie;
+		}
+
+		ImageView iv_itemIcon = (ImageView) convertView
+				.findViewById(R.id.iv_itemIcon);
+
+		iv_itemIcon.setFadingEdgeLength(2);
+		UtilMethods.setCustomIconToTypeOfMedia(iv_itemIcon, type);
 
 		String text = getItem(position);
 

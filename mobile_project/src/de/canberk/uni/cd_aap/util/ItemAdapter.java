@@ -39,7 +39,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 				.findViewById(R.id.iv_itemIcon);
 
 		iv_itemIcon.setFadingEdgeLength(2);
-		setCustomIconToTypeOfMedia(iv_itemIcon, type);
+		UtilMethods.setCustomIconToTypeOfMedia(iv_itemIcon, type);
 
 		TextView tv_itemGenre = (TextView) convertView
 				.findViewById(R.id.tv_itemGenre);
@@ -54,28 +54,6 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 		cb_itemFavorite.setChecked(theItem.isFavorite());
 
 		return convertView;
-
-	}
-
-	private void setCustomIconToTypeOfMedia(ImageView iv_itemIcon, ItemType type) {
-		ImageView itemIcon = iv_itemIcon;
-
-		switch (type) {
-
-		case Album:
-			itemIcon.setImageResource(R.drawable.icon_music);
-			break;
-		case Book:
-			itemIcon.setImageResource(R.drawable.icon_book);
-			break;
-		case Movie:
-			itemIcon.setImageResource(R.drawable.icon_movie);
-			break;
-
-		default:
-			itemIcon.setImageResource(R.drawable.ic_launcher);
-			break;
-		}
 
 	}
 
