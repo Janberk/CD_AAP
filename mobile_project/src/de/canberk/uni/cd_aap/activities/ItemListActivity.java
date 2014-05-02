@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import de.canberk.uni.cd_aap.data.ProjectConstants;
 import de.canberk.uni.cd_aap.fragments.ItemListFragment;
 
+// Open Iconic — www.useiconic.com/open
+
 public class ItemListActivity extends FragmentActivityBuilder {
 
 	@SuppressWarnings("static-access")

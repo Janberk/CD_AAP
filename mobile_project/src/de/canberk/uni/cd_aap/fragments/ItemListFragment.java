@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.canberk.uni.cd_aap.R;
@@ -49,12 +50,19 @@ public class ItemListFragment extends Fragment {
 	private Button btn_addItem;
 	private EditText et_newItemTitle;
 
+	private ImageView iv_selectList;
+	private ImageView iv_settings;
+	private ImageView iv_deleteItem;
+	private ImageView iv_logout;
+
 	private String titleOfNewItem = null;
 	private int idOfNewItem = 0;
 
 	private String createdBy;
 
 	private String tag = null;
+
+	int containerId = 0;
 
 	public static ItemListFragment newItemListFragment(String listTag) {
 
@@ -66,6 +74,63 @@ public class ItemListFragment extends Fragment {
 
 		return itemListFragment;
 
+	}
+
+	private void initElements(View view) {
+		listView = (ListView) view.findViewById(R.id.itemList);
+		et_newItemTitle = (EditText) view.findViewById(R.id.et_newItemTitle);
+		btn_addItem = (Button) view.findViewById(R.id.btn_add);
+
+		iv_selectList = (ImageView) view.findViewById(R.id.iv_menu_showList);
+		iv_selectList.setOnClickListener(new View.OnClickListener() {
+
+			FragmentManager fragmentManager = getFragmentManager();
+			FragmentTransaction fragmentTransaction = fragmentManager
+					.beginTransaction();
+
+			@Override
+			public void onClick(View v) {
+				fragmentTransaction.replace(containerId, selectList);
+				fragmentTransaction.commit();
+			}
+		});
+
+		iv_settings = (ImageView) view.findViewById(R.id.iv_menu_settings);
+		iv_settings.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Settings", Toast.LENGTH_LONG)
+						.show();
+			}
+		});
+
+		iv_deleteItem = (ImageView) view.findViewById(R.id.iv_menu_delete);
+		iv_deleteItem.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Delete", Toast.LENGTH_LONG)
+						.show();
+			}
+		});
+
+		iv_logout = (ImageView) view.findViewById(R.id.iv_menu_logout);
+		iv_logout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Logout", Toast.LENGTH_LONG)
+						.show();
+				logout();
+			}
+		});
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		containerId = ((ViewGroup) getView().getParent()).getId();
+		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
@@ -93,7 +158,7 @@ public class ItemListFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_list_view, null);
 
-		listView = (ListView) view.findViewById(R.id.itemList);
+		initElements(view);
 
 		if (tag.equals(ProjectConstants.TAG_ALL)) {
 			itemList = daoItem.getAllItems(createdBy);
@@ -126,10 +191,7 @@ public class ItemListFragment extends Fragment {
 				startActivityForResult(newIntent, 0);
 			}
 		});
-		
-		et_newItemTitle = (EditText) view.findViewById(R.id.et_newItemTitle);
 
-		btn_addItem = (Button) view.findViewById(R.id.btn_add);
 		btn_addItem.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -254,16 +316,17 @@ public class ItemListFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		FragmentManager fragmentManager = getFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager
-				.beginTransaction();
-
-		int containerId = ((ViewGroup) (getView().getParent())).getId();
+		// FragmentManager fragmentManager = getFragmentManager();
+		// FragmentTransaction fragmentTransaction = fragmentManager
+		// .beginTransaction();
+		//
+		// int containerId = ((ViewGroup) (getView().getParent())).getId();
 
 		switch (item.getItemId()) {
-		case R.id.menuItem_list:
-			fragmentTransaction.replace(containerId, selectList);
-			fragmentTransaction.commit();
+		case R.id.menuItem_settings:
+			Toast.makeText(getActivity(), "Settings", Toast.LENGTH_LONG).show();
+			// fragmentTransaction.replace(containerId, selectList);
+			// fragmentTransaction.commit();
 			return true;
 
 		case R.id.menuItem_logout:
