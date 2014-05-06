@@ -125,11 +125,16 @@ public class ItemListFragment extends Fragment {
 					if (view != null) {
 						CheckBox cb_itemDelete = (CheckBox) view
 								.findViewById(R.id.cb_itemDelete);
+						ImageView iv_deleteSingleItem = (ImageView) view
+								.findViewById(R.id.iv_deleteSingleItem);
 						cb_itemDelete.setChecked(false);
+
 						if (cb_itemDelete.getVisibility() == View.GONE) {
 							cb_itemDelete.setVisibility(View.VISIBLE);
+							iv_deleteSingleItem.setVisibility(View.VISIBLE);
 						} else {
 							cb_itemDelete.setVisibility(View.GONE);
+							iv_deleteSingleItem.setVisibility(View.GONE);
 						}
 					}
 				}
@@ -164,7 +169,7 @@ public class ItemListFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		Bundle bundle = getArguments();
-		
+
 		editMode = false;
 
 		if (bundle == null) {
@@ -198,7 +203,7 @@ public class ItemListFragment extends Fragment {
 			log.info(item.toString());
 		}
 
-		adapter = new ItemAdapter(this.getActivity(), itemList);
+		adapter = new ItemAdapter(this.getActivity(), itemList, this);
 		adapter.setNotifyOnChange(true);
 
 		listView.setAdapter(adapter);
@@ -369,6 +374,10 @@ public class ItemListFragment extends Fragment {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	public DAOItem getDaoItem() {
+		return daoItem;
 	}
 
 }

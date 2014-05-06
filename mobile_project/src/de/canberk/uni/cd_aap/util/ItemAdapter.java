@@ -16,22 +16,29 @@ import de.canberk.uni.cd_aap.model.Item;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
 
-	private ArrayList<Item> itemList;
-	private final Context context;
-
-	public ItemAdapter(Context context, ArrayList<Item> items) {
-		super(context, android.R.layout.simple_list_item_1, items);
-		this.context = context;
-		this.itemList = items;
-	}
-
 	// TODO ViewHolder Pattern
 	static class ViewHolder {
 		ImageView iv_itemIcon;
+		ImageView iv_deleteSingleItem;
 		TextView tv_itemGenre;
 		TextView tv_itemTitle;
 		CheckBox cb_itemFavorite;
 		CheckBox cb_itemDelete;
+	}
+
+	private ArrayList<Item> itemList;
+	private final Context context;
+	private ItemListFragment itemListFragment;
+
+	public static boolean deletePermitted;
+
+	public ItemAdapter(Context context, ArrayList<Item> items,
+			ItemListFragment itemListFragment) {
+		super(context, android.R.layout.simple_list_item_1, items);
+		this.context = context;
+		this.itemList = items;
+		this.itemListFragment = itemListFragment;
+		deletePermitted = false;
 	}
 
 	@Override
@@ -57,6 +64,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 					.findViewById(R.id.cb_itemFavorite);
 			holder.cb_itemDelete = (CheckBox) convertView
 					.findViewById(R.id.cb_itemDelete);
+			holder.iv_deleteSingleItem = (ImageView) convertView
+					.findViewById(R.id.iv_deleteSingleItem);
 			convertView.setTag(holder);
 
 		} else {
@@ -71,19 +80,54 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 		holder.tv_itemGenre.setText(theItem.getGenre());
 		holder.tv_itemTitle.setText(theItem.getTitle());
 		holder.cb_itemFavorite.setChecked(theItem.isFavorite());
-		
+
 		if (ItemListFragment.editMode) {
 			holder.cb_itemDelete.setVisibility(View.VISIBLE);
+			holder.iv_deleteSingleItem.setVisibility(View.VISIBLE);
 		} else {
 			holder.cb_itemDelete.setVisibility(View.GONE);
-		}		
+			holder.iv_deleteSingleItem.setVisibility(View.GONE);
+		}
+
+		setClickListenerCheckBox(holder.cb_itemDelete);
+		setClickListenerImageView(holder.iv_deleteSingleItem, theItem, position);
 
 		return convertView;
 
 	}
 
+	public void setClickListenerCheckBox(final CheckBox checkBox) {
+		checkBox.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (checkBox.isChecked()) {
+					deletePermitted = true;
+				} else {
+					deletePermitted = false;
+				}
+			}
+		});
+	}
+
+	public void setClickListenerImageView(final ImageView image,
+			final Item item, final int position) {
+		image.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (deletePermitted) {
+					itemList.remove(position);
+					itemListFragment.getDaoItem().deleteItem(item);
+					refresh(itemList);
+				}
+			}
+		});
+	}
+
 	public void refresh(ArrayList<Item> itemList) {
 		this.itemList = itemList;
+		deletePermitted = false;
 		notifyDataSetChanged();
 	}
 
