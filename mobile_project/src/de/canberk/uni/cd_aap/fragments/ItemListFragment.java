@@ -37,8 +37,11 @@ import de.canberk.uni.cd_aap.util.AllItems;
 import de.canberk.uni.cd_aap.util.ItemAdapter;
 import de.canberk.uni.cd_aap.util.ItemType;
 import de.canberk.uni.cd_aap.util.Logger;
+import de.canberk.uni.cd_aap.util.UtilMethods;
 
 public class ItemListFragment extends Fragment {
+
+	public static boolean editMode;
 
 	private SelectListFragment selectList = new SelectListFragment();;
 	private Logger log = new Logger();
@@ -64,7 +67,6 @@ public class ItemListFragment extends Fragment {
 	private String tag = null;
 
 	private int containerId = 0;
-	private int totalItemCount;
 
 	public static ItemListFragment newItemListFragment(String listTag) {
 
@@ -113,25 +115,24 @@ public class ItemListFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				// int childCount = listView.getChildCount();
-				// TODO nur items des users laden, sonst stimmt die zahl nicht; footer bedeckt item
-				int count = totalItemCount;
+				editMode = UtilMethods.modeSwitcher(editMode);
 
-				for (int i = 0; i < totalItemCount; i++) {
+				int childCount = listView.getChildCount();
+
+				for (int i = 0; i < childCount; i++) {
 					View view = listView.getChildAt(i);
 
 					if (view != null) {
 						CheckBox cb_itemDelete = (CheckBox) view
 								.findViewById(R.id.cb_itemDelete);
+						cb_itemDelete.setChecked(false);
 						if (cb_itemDelete.getVisibility() == View.GONE) {
 							cb_itemDelete.setVisibility(View.VISIBLE);
 						} else {
 							cb_itemDelete.setVisibility(View.GONE);
 						}
 					}
-
 				}
-
 			}
 		});
 
@@ -163,6 +164,8 @@ public class ItemListFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		Bundle bundle = getArguments();
+		
+		editMode = false;
 
 		if (bundle == null) {
 			tag = ProjectConstants.TAG_ALL;
@@ -172,7 +175,6 @@ public class ItemListFragment extends Fragment {
 		AllItems allItems = AllItems.get(getActivity(), createdBy);
 		daoItem = allItems.getDaoItem();
 		daoItem.open();
-		totalItemCount = daoItem.getItemCount();
 	}
 
 	@Override
@@ -310,12 +312,14 @@ public class ItemListFragment extends Fragment {
 
 	@Override
 	public void onPause() {
+		editMode = false;
 		daoItem.close();
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
+		editMode = false;
 		daoItem.open();
 		itemList.clear();
 		if (tag.equals(ProjectConstants.TAG_ALL)) {

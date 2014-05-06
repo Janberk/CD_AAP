@@ -74,6 +74,14 @@ public class UtilMethods {
 		}
 		return 0;
 	}
+	
+	public static boolean modeSwitcher(boolean editMode) {
+		if (!editMode) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public static void setCustomIconToTypeOfMedia(ImageView itemIcon,
 			ItemType type) {

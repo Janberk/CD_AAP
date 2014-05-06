@@ -17,8 +17,8 @@
 
         <ListView
             android:id="@+id/itemList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/btn_add"
             android:layout_margin="@dimen/app_margin_4dp"
             android:dividerHeight="3dp"
