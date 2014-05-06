@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -62,7 +63,8 @@ public class ItemListFragment extends Fragment {
 
 	private String tag = null;
 
-	int containerId = 0;
+	private int containerId = 0;
+	private int totalItemCount;
 
 	public static ItemListFragment newItemListFragment(String listTag) {
 
@@ -110,8 +112,26 @@ public class ItemListFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "Delete", Toast.LENGTH_LONG)
-						.show();
+
+				// int childCount = listView.getChildCount();
+				// TODO nur items des users laden, sonst stimmt die zahl nicht; footer bedeckt item
+				int count = totalItemCount;
+
+				for (int i = 0; i < totalItemCount; i++) {
+					View view = listView.getChildAt(i);
+
+					if (view != null) {
+						CheckBox cb_itemDelete = (CheckBox) view
+								.findViewById(R.id.cb_itemDelete);
+						if (cb_itemDelete.getVisibility() == View.GONE) {
+							cb_itemDelete.setVisibility(View.VISIBLE);
+						} else {
+							cb_itemDelete.setVisibility(View.GONE);
+						}
+					}
+
+				}
+
 			}
 		});
 
@@ -125,8 +145,9 @@ public class ItemListFragment extends Fragment {
 				logout();
 			}
 		});
+
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		containerId = ((ViewGroup) getView().getParent()).getId();
@@ -151,6 +172,7 @@ public class ItemListFragment extends Fragment {
 		AllItems allItems = AllItems.get(getActivity(), createdBy);
 		daoItem = allItems.getDaoItem();
 		daoItem.open();
+		totalItemCount = daoItem.getItemCount();
 	}
 
 	@Override

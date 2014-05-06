@@ -17,6 +17,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
 	private ArrayList<Item> itemList;
 	private final Context context;
+	
+	private CheckBox cb_itemDelete;
 
 	public ItemAdapter(Context context, ArrayList<Item> items) {
 		super(context, android.R.layout.simple_list_item_1, items);
@@ -52,6 +54,10 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 		CheckBox cb_itemFavorite = (CheckBox) convertView
 				.findViewById(R.id.cb_itemFavorite);
 		cb_itemFavorite.setChecked(theItem.isFavorite());
+
+		cb_itemDelete = (CheckBox) convertView
+				.findViewById(R.id.cb_itemDelete);
+		cb_itemDelete.setVisibility(View.GONE);
 
 		return convertView;
 

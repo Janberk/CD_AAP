@@ -82,6 +82,7 @@
 
             <CheckBox
                 android:id="@+id/cb_rememberMe"
+                android:button="@drawable/custom_checkbox"
                 style="@style/textViewForm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

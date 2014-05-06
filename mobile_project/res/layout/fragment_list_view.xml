@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#000022"
     android:layout_marginBottom="@dimen/app_margin_4dp" >
 
     <RelativeLayout
@@ -20,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_add"
             android:layout_margin="@dimen/app_margin_4dp"
-            android:dividerHeight="3dp" />
+            android:dividerHeight="3dp"
+            android:choiceMode="multipleChoice" />
 
         <Button
             android:id="@+id/btn_add"
