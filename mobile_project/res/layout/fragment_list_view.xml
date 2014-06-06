@@ -47,11 +47,11 @@
 
     <include
         android:id="@+id/itemlistFooter"
+        layout="@layout/custom_menu_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        layout="@layout/custom_menu_bar" >
+        android:layout_centerHorizontal="true" >
     </include>
 
 </RelativeLayout>
