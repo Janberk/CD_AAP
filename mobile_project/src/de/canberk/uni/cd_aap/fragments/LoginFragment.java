@@ -62,9 +62,9 @@ public class LoginFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		httpPost = new HTTPRequestHandler(
-				"http://10.0.2.2:80/development/examples/registration_form/backend_android/check_login.php");
-//		httpPost = new HTTPRequestHandler(
-//				"http://192.168.1.50:8080/development/examples/registration_form/backend_android/check_login.php");
+				"http://10.0.2.2:80/development/mediaboxmngr_backend/users/log_in.php");
+		// httpPost = new HTTPRequestHandler(
+		// "http://192.168.1.50:8080/development/mediaboxmngr_backend/users/log_in.php");
 	}
 
 	@Override
