@@ -43,7 +43,7 @@ public class ItemListFragment extends Fragment {
 
 	public static boolean editMode;
 
-	private SelectListFragment selectList = new SelectListFragment();;
+	private SelectListFragment selectList = new SelectListFragment();
 	private Logger log = new Logger();
 	private DAOItem daoItem;
 
