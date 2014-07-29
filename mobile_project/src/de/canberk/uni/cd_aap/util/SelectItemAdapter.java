@@ -13,7 +13,6 @@ import de.canberk.uni.cd_aap.R;
 
 public class SelectItemAdapter extends ArrayAdapter<String> {
 
-	@SuppressWarnings("unused")
 	private ArrayList<String> listEntries;
 	private final Context context;
 
